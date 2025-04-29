@@ -42,7 +42,7 @@ jobs:
           ./command_dump.py
       - name: Detect changes on commit
         run: |
-          if [ -n "$(git diff codecov-cli/codecovcli_commands)" || -n "$(git diff prevent-cli/preventcli_commands)" ]; then
+          if [ -n "$(git diff codecov-cli/codecovcli_commands)" ] || [ -n "$(git diff prevent-cli/preventcli_commands)" ]; then
             echo "Please run `python command_dump.py` before submitting, or install the hooks"
             echo "$(git diff codecov-cli/codecovcli_commands)"
             echo "$(git diff prevent-cli/preventcli_commands)"
