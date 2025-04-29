@@ -23,8 +23,7 @@ dependencies = [
 
 
 [project.scripts]
-prevent = "prevent_cli.main:run"
-prevent-cli = "prevent_cli.main:run"
+sentry-prevent-cli = "prevent_cli.main:run"
 
 [build-system]
 requires = ["setuptools"]
