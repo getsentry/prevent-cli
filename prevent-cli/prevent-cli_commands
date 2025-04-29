@@ -1,0 +1,30 @@
+Usage: prevent-cli [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --auto-load-params-from [CircleCI|GithubActions|GitlabCI|Bitbucket|Bitrise|AppVeyor|Woodpecker|Heroku|DroneCI|BuildKite|AzurePipelines|Jenkins|CirrusCI|Teamcity|Travis|AWSCodeBuild|GoogleCloudBuild|Local]
+  -u, --enterprise-url, --url TEXT
+                                  Change the upload host (Enterprise use)
+  -v, --verbose                   Use verbose logging
+  --disable-telem                 Disable sending telemetry data to Codecov
+  --version                       Show the version and exit.
+  --help                          Show this message and exit.
+
+Commands:
+  create-commit
+  create-report
+  do-upload
+  empty-upload
+  pr-base-picking
+  process-test-results
+  send-notifications
+  upload-coverage
+  upload-process
+
+
+
+
+
+
+
+
+

@@ -22,10 +22,9 @@ dependencies = [
 ]
 
 
-
 [project.scripts]
 prevent = "prevent_cli.main:run"
-preventcli = "prevent_cli.main:run"
+prevent-cli = "prevent_cli.main:run"
 
 [build-system]
 requires = ["setuptools"]
@@ -37,5 +36,4 @@ packages = ["prevent_cli"]
 
 [tool.uv.sources]
 codecov-cli = {path = "../codecov-cli"}
-
 
