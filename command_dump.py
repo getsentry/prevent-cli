@@ -32,4 +32,4 @@ def command_dump(commands: list[str], out_path: str):
 
 if __name__ == "__main__":
     command_dump(["codecovcli"], "codecov-cli/codecovcli_commands")
-    command_dump(["prevent-cli"], "prevent-cli/prevent-cli_commands")
+    command_dump(["sentry-prevent-cli"], "prevent-cli/prevent-cli_commands")
