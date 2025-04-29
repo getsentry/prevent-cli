@@ -90,9 +90,9 @@ jobs:
         run: |
           cd codecov-cli
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          python -m pip install -e .
-          pip install -r tests/requirements.txt
+          python -m pip install -e codecov-cli
+          python -m pip install -e prevent-cli
+          pip install -r codecov-cli/tests/requirements.txt
       - name: Test with pytest
         run: |
           cd codecov-cli
@@ -104,5 +104,8 @@ jobs:
         run: |
           codecovcli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}}
           codecovcli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}}
-        # todo: dogfood prevent-cli
-        
+      - name: Dogfooding sentry-prevent-cli
+        if: ${{ !github.event.pull_request.head.repo.fork && github.repository_owner == 'getsentry' }}
+        run: |
+          sentry-prevent-cli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}}
+          sentry-prevent-cli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}}
