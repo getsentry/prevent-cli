@@ -3,9 +3,8 @@ import pathlib
 import typing
 
 import click
-
 from codecov_cli import __version__
-from codecov_cli.opentelemetry import init_telem
+from codecov_cli.branding import Branding
 from codecov_cli.commands.base_picking import pr_base_picking
 from codecov_cli.commands.commit import create_commit
 from codecov_cli.commands.create_report_result import create_report_results
@@ -21,6 +20,7 @@ from codecov_cli.helpers.ci_adapters import get_ci_adapter, get_ci_providers_lis
 from codecov_cli.helpers.config import load_cli_config
 from codecov_cli.helpers.logging_utils import configure_logger
 from codecov_cli.helpers.versioning_systems import get_versioning_system
+from codecov_cli.opentelemetry import init_telem
 
 logger = logging.getLogger("codecovcli")
 
@@ -34,7 +34,7 @@ logger = logging.getLogger("codecovcli")
     ),
 )
 @click.option(
-    "--codecov-yml-path",
+    "--yml-path",
     type=click.Path(path_type=pathlib.Path),
     default=None,
 )
@@ -50,24 +50,30 @@ logger = logging.getLogger("codecovcli")
 def cli(
     ctx: click.Context,
     auto_load_params_from: typing.Optional[str],
-    codecov_yml_path: pathlib.Path,
+    yml_path: pathlib.Path,
     enterprise_url: str,
     verbose: bool = False,
     disable_telem: bool = False,
 ):
+    branding = [Branding.PREVENT, Branding.CODECOV]
     ctx.obj["cli_args"] = ctx.params
     ctx.obj["cli_args"]["version"] = f"cli-{__version__}"
     configure_logger(logger, log_level=(logging.DEBUG if verbose else logging.INFO))
     ctx.help_option_names = ["-h", "--help"]
     ctx.obj["ci_adapter"] = get_ci_adapter(auto_load_params_from)
     ctx.obj["versioning_system"] = get_versioning_system()
-    ctx.obj["codecov_yaml"] = load_cli_config(codecov_yml_path)
-    if ctx.obj["codecov_yaml"] is None:
-        logger.debug("No codecov_yaml found")
-    elif (token := ctx.obj["codecov_yaml"].get("codecov", {}).get("token")) is not None:
-        ctx.default_map = {ctx.invoked_subcommand: {"token": token}}
+    ctx.obj["yaml"] = load_cli_config(yml_path)
+    if ctx.obj["yaml"] is None:
+        logger.debug("No yaml found")
+    else:
+        token = ctx.obj["yaml"].get("codecov", {}).get("token") or ctx.obj["yaml"].get(
+            "prevent", {}
+        ).get("token")
+        if token is not None:
+            ctx.default_map = {ctx.invoked_subcommand: {"token": token}}
     ctx.obj["enterprise_url"] = enterprise_url
     ctx.obj["disable_telem"] = disable_telem
+    ctx.obj["branding"] = branding
 
     init_telem(ctx.obj)
 

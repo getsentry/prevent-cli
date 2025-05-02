@@ -3,12 +3,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-authors = [
-    {name = "Tom Hu", email = "thomas.hu@sentry.io"},
-]
-maintainers = [
-    {name = "Codecov Support", email = "support@codecov.io"},
-]
+authors = [{ name = "Sentry", email = "oss@sentry.io" }]
 description = "Codecov Command Line Interface"
 dependencies = [
     "click==8.*",
@@ -21,7 +16,7 @@ dependencies = [
     "test-results-parser==0.5.4",
     "wrapt>=1.17.2",
 ]
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 name = "codecov-cli"
 readme = "README.md"
 requires-python = ">= 3.9"
@@ -32,9 +27,7 @@ codecov = "codecov_cli.main:run"
 codecovcli = "codecov_cli.main:run"
 
 [tool.pytest.ini_options]
-env = [
-    "CODECOV_ENV=test",
-]
+env = ["CODECOV_ENV=test"]
 
 [tool.setuptools]
 packages = ["codecov_cli"]
