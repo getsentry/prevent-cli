@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
 import subprocess
 
 
-def command_dump(commands):
+def command_dump(commands: list[str], out_path: str):
     print(f"Dumping {' '.join(commands)}")
     command_docs = subprocess.run(
         [*commands, "--help"], capture_output=True
@@ -16,16 +17,19 @@ def command_dump(commands):
 
     if "Commands:" in split_docs:
         sub_commands = [
-            sub_command.strip() for sub_command in split_docs[index_of + 1 :] if sub_command.strip()
+            sub_command.strip()
+            for sub_command in split_docs[index_of + 1 :]
+            if sub_command.strip()
         ]
         for sub_command in sub_commands:
             command_docs = "\n".join(
-                [command_docs, command_dump([*commands, sub_command])]
+                [command_docs, command_dump([*commands, sub_command], out_path)]
             )
 
-    with open("codecovcli_commands", "w") as f:
+    with open(out_path, "w") as f:
         f.write(command_docs)
 
 
 if __name__ == "__main__":
-    command_dump(["codecovcli"])
+    command_dump(["codecovcli"], "codecov-cli/codecovcli_commands")
+    command_dump(["sentry-prevent-cli"], "prevent-cli/preventcli_commands")

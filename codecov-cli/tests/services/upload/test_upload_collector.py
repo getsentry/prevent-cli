@@ -176,7 +176,9 @@ def test_generate_upload_data(tmp_path):
 
     file_finder = FileFinder(tmp_path)
 
-    network_finder = NetworkFinder(GitVersioningSystem(), False, None, None, None)
+    network_finder = NetworkFinder(
+        GitVersioningSystem(), False, None, None, Path("codecov-cli")
+    )
 
     collector = UploadCollector([], network_finder, file_finder, None)
 

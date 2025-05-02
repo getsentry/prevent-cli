@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "joseph-sentry", email = "joseph.sawaya@sentry.io" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.9"
 dependencies = [
     "click==8.*",
     "codecov-cli>=10.3.0",
@@ -22,10 +22,8 @@ dependencies = [
 ]
 
 
-
 [project.scripts]
-prevent = "prevent_cli.main:run"
-preventcli = "prevent_cli.main:run"
+sentry-prevent-cli = "prevent_cli.main:run"
 
 [build-system]
 requires = ["setuptools"]
@@ -37,5 +35,4 @@ packages = ["prevent_cli"]
 
 [tool.uv.sources]
 codecov-cli = {path = "../codecov-cli"}
-
 

@@ -34,6 +34,11 @@ logger = logging.getLogger("codecovcli")
     ),
 )
 @click.option(
+    "--codecov-yml-path",
+    type=click.Path(path_type=pathlib.Path),
+    default=None,
+)
+@click.option(
     "--enterprise-url", "--url", "-u", help="Change the upload host (Enterprise use)"
 )
 @click.option("-v", "--verbose", "verbose", help="Use verbose logging", is_flag=True)
@@ -56,6 +61,11 @@ def cli(
     ctx.help_option_names = ["-h", "--help"]
     ctx.obj["ci_adapter"] = get_ci_adapter(auto_load_params_from)
     ctx.obj["versioning_system"] = get_versioning_system()
+    ctx.obj["codecov_yaml"] = load_cli_config(codecov_yml_path)
+    if ctx.obj["codecov_yaml"] is None:
+        logger.debug("No codecov_yaml found")
+    elif (token := ctx.obj["codecov_yaml"].get("codecov", {}).get("token")) is not None:
+        ctx.default_map = {ctx.invoked_subcommand: {"token": token}}
     ctx.obj["enterprise_url"] = enterprise_url
     ctx.obj["disable_telem"] = disable_telem
 
@@ -65,14 +75,16 @@ def cli(
 cli.add_command(do_upload)
 cli.add_command(create_commit)
 cli.add_command(create_report)
-cli.add_command(create_report_results)
-cli.add_command(get_report_results)
 cli.add_command(pr_base_picking)
 cli.add_command(empty_upload)
 cli.add_command(upload_coverage)
 cli.add_command(upload_process)
 cli.add_command(send_notifications)
 cli.add_command(process_test_results)
+
+# deprecated commands:
+cli.add_command(create_report_results)
+cli.add_command(get_report_results)
 
 
 def run():
