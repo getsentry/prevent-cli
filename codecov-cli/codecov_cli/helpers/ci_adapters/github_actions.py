@@ -66,10 +66,10 @@ class GithubActionsCIAdapter(CIAdapterBase):
         return os.getenv("GITHUB_REPOSITORY")
 
     def _get_branch(self):
-        def remove_prefix(s, prefix):
+        def remove_prefix(s: str, prefix: str) -> str:
             if s.startswith(prefix):
                 return s[len(prefix) :]
-            return s
+            return ""
 
         head_ref = os.getenv("GITHUB_HEAD_REF", "")
         ref = remove_prefix(os.getenv("GITHUB_REF", ""), "refs/heads/")
