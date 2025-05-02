@@ -42,7 +42,5 @@ build-backend = "setuptools.build_meta"
 packages = ["codecov_cli"]
 
 [tool.pytest.ini_options]
-env = [
-    "CODECOV_ENV=test",
-]
+env = ["CODECOV_ENV=test"]
 
