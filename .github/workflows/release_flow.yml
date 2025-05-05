@@ -37,6 +37,7 @@ jobs:
         with:
           path: dist/
           pattern: cibw-*
+
       - name: Display and move artifacts
         run: |
           ls -alrt */*/*
@@ -47,6 +48,7 @@ jobs:
           echo "Deleting empty directories"
           find . -empty -type d -delete
           ls -alrt */*
+
       - name: Publish package to PyPi
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

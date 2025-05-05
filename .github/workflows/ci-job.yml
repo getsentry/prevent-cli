@@ -14,10 +14,12 @@ jobs:
       with:
         submodules: true
         fetch-depth: 2
+
     - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
         python-version: "3.12"
+
     - name: Install dependencies
       run: |
         cd codecov-cli
@@ -25,6 +27,7 @@ jobs:
         pip install -r requirements.txt
         python -m pip install -e .
         pip install -r tests/requirements.txt
+
     - name: Test with pytest
       run: |
         cd codecov-cli
