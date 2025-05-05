@@ -1,11 +1,12 @@
 name: Create CLI Release PR
 
 on:
-  workflow_dispatch:
-    inputs:
-      versionName:
-        description: 'Name of version  (ie 23.9.5)'
-        required: true
+  # workflow_dispatch:
+  #   inputs:
+  #     versionName:
+  #       description: 'Name of version  (ie 23.9.5)'
+  #       required: true
+  push
 
 jobs:
   create-release-pr:
@@ -26,16 +27,19 @@ jobs:
       #     git_config_global: true
 
       - name: Create release branch
-        run: git checkout -b release/${{ github.event.inputs.versionName }}
+        #run: git checkout -b release/${{ github.event.inputs.versionName }}
+        run: git checkout -b test-sentry-release-bot
 
       - name: Update version and push
         id: make-commit
         run: |
           sed -i 's/version\ =\ "[0-9]\+\.[0-9]\+\.[0-9]\+"/version\ =\ "${{ github.event.inputs.versionName }}"/g' pyproject.toml
           git add pyproject.toml
-          git commit -S --message "Prepare release ${{ github.event.inputs.versionName }}"
+          #git commit --message "Prepare release ${{ github.event.inputs.versionName }}"
+          git commit --message "test"
           echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-          git push origin release/${{ github.event.inputs.versionName }}
+          #git push origin release/${{ github.event.inputs.versionName }}
+          git push origin test-sentry-release-bot
 
       - name: Get auth token
         id: token
@@ -48,10 +52,13 @@ jobs:
         uses: thomaseizinger/create-pull-request@1.3.1
         with:
           github_token: ${{ steps.token.outputs.token }}
-          head: release/${{ github.event.inputs.versionName }}
+          # head: release/${{ github.event.inputs.versionName }}
+          head: test-sentry-release-bot
           base: main
-          title: Release ${{ github.event.inputs.versionName }}
+          # title: Release ${{ github.event.inputs.versionName }}
+          title: Test pr
           reviewers: ${{ github.event.issue.user.login }}
-          body: |
-            Release PR for ${{ github.event.inputs.versionName }}
-            I've updated the version name and committed: ${{ steps.make-commit.outputs.commit }}.
+          # body: |
+          #   Release PR for ${{ github.event.inputs.versionName }}
+          #   I've updated the version name and committed: ${{ steps.make-commit.outputs.commit }}.
+          body: test body
