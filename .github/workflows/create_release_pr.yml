@@ -32,8 +32,8 @@ jobs:
 
       - name: Set bot's Git info
         run: |
-          git config --global user.email "10587625+getsentry-bot@users.noreply.github.com"
-          git config --global user.name "getsentry-bot"
+          git config --global user.email "180476844+sentry-release-bot[bot]@users.noreply.github.com"
+          git config --global user.name "sentry-release-bot[bot]"
 
       - name: Update version and push
         id: make-commit
