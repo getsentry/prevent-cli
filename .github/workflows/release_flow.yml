@@ -12,14 +12,14 @@ jobs:
       contents: read  # This is required for actions/checkout
     uses: ./.github/workflows/build_for_pypi.yml
     with:
-      publish: true
+      publish: false # todo: back to true when tested
     secrets: inherit
 
   buildassets:
     name: Build packages
     uses: ./.github/workflows/build_assets.yml
     with:
-      release: true
+      release: false # todo: back to true when tested
     secrets: inherit
 
   publish_to_pypi:
