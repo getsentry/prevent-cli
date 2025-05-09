@@ -1,4 +1,5 @@
 #!/bin/sh
+cd codecov-cli
 apt install build-essential
 pip install -r requirements.txt
 pip install .

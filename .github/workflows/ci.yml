@@ -18,6 +18,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+
       - name: Check linting with ruff
         run: |
           make lint
@@ -28,18 +29,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e codecov-cli
           python -m pip install -e prevent-cli
+
       - name: Run command_dump
         run: |
           ./command_dump.py
+
       - name: Detect changes on commit
         run: |
           if [ -n "$(git diff codecov-cli/codecovcli_commands prevent-cli/preventcli_commands)" ]; then
@@ -56,16 +61,20 @@ jobs:
         with:
           submodules: true
           fetch-depth: 2
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - name: Install CLI
         # todo: update this to dogfood prevent cli, maybe try both?
         run: |
           pip install codecov-cli
+
       - name: Create commit in codecov
         run: |
           codecovcli create-commit -t ${{ secrets.CODECOV_TOKEN }} --git-service github
+
       - name: Create commit report in codecov
         run: |
           codecovcli create-report -t ${{ secrets.CODECOV_TOKEN }} --git-service github
@@ -82,27 +91,32 @@ jobs:
         with:
           submodules: true
           fetch-depth: 2
+
       - name: Set up Python ${{matrix.python-version}}
         uses: actions/setup-python@v5
         with:
           python-version: "${{matrix.python-version}}"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e codecov-cli
           python -m pip install -e prevent-cli
           pip install -r codecov-cli/tests/requirements.txt
+
       - name: Test with pytest
         run: |
           cd codecov-cli
           pytest --cov --junitxml=${{matrix.os}}-${{matrix.python-version}}junit.xml
         env:
           CODECOV_ENV: test
+
       - name: Dogfooding codecov-cli
         if: ${{ !github.event.pull_request.head.repo.fork && github.repository_owner == 'getsentry' }}
         run: |
           codecovcli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
           codecovcli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
+
       - name: Dogfooding sentry-prevent-cli
         if: ${{ !github.event.pull_request.head.repo.fork && github.repository_owner == 'getsentry' }}
         run: |
