@@ -5,6 +5,9 @@ on:
     types:
       - created
 
+permissions:
+  contents: read
+
 jobs:
   build_for_pypi:
     permissions:
