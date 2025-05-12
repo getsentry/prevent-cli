@@ -2,5 +2,6 @@
 
 set -e
 
-python command_dump.py
-git add codecovcli_commands
+./command_dump.py
+git add codecov-cli/codecovcli_commands
+git add prevent-cli/preventcli_commands
