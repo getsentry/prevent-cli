@@ -9,7 +9,7 @@ authors = [
 requires-python = ">=3.9"
 dependencies = [
     "click==8.*",
-    "codecov-cli>=10.3.0",
+    "codecov-cli>=10.4.0",
     "httpx==0.27.*",
     "ijson==3.*",
     "pyyaml==6.*",
