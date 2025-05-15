@@ -44,7 +44,7 @@ skip = ["pp*", "cp313-*"]
 test-command = "codecovcli --help"
 
 [tool.cibuildwheel.config-settings]
-pure-python = "false"
+pure-python = "true"
 
 [tool.cibuildwheel.environment]
 PIP_CONSTRAINT = "requirements.txt"
