@@ -39,3 +39,18 @@ class CodecovOption(click.Option):
                 if res is not None:
                     return res
         return None
+
+
+class BrandedOption(click.Option):
+    def resolve_envvar_value(self, ctx: click.Context) -> str | None:
+        actual_var = self.envvar
+        self.envvar = [
+            f"{brand.value.upper()}_{actual_var}" for brand in ctx.obj["branding"]
+        ]
+        res = super().resolve_envvar_value(ctx)
+        self.envvar = actual_var
+        return res
+
+
+class BrandedCodecovOption(CodecovOption, BrandedOption):
+    pass

@@ -4,7 +4,12 @@ import typing
 import click
 import sentry_sdk
 
-from codecov_cli.fallbacks import CodecovOption, FallbackFieldEnum
+from codecov_cli.fallbacks import (
+    BrandedCodecovOption,
+    BrandedOption,
+    CodecovOption,
+    FallbackFieldEnum,
+)
 from codecov_cli.helpers.args import get_cli_args
 from codecov_cli.helpers.encoder import slug_without_subgroups_is_invalid
 from codecov_cli.services.commit.base_picking import base_picking_logic
@@ -29,16 +34,17 @@ logger = logging.getLogger("codecovcli")
 )
 @click.option(
     "--slug",
-    cls=CodecovOption,
+    cls=BrandedCodecovOption,
     fallback_field=FallbackFieldEnum.slug,
     help="owner/repo slug",
-    envvar="CODECOV_SLUG",
+    envvar="SLUG",
 )
 @click.option(
     "-t",
     "--token",
+    cls=BrandedOption,
     help="Codecov upload token",
-    envvar="CODECOV_TOKEN",
+    envvar="TOKEN",
 )
 @click.option(
     "--service",
