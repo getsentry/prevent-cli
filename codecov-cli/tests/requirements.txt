@@ -19,9 +19,7 @@ iniconfig==2.0.0
 nodeenv==1.8.0
     # via pre-commit
 packaging==24.2
-    # via
-    #   -r requirements.in
-    #   pytest
+    # via pytest
 platformdirs==3.11.0
     # via virtualenv
 pluggy==1.3.0
@@ -44,9 +42,7 @@ pytest-env==1.1.0
 pytest-mock==3.11.1
     # via -r requirements.in
 pyyaml==6.0.2
-    # via
-    #   -r requirements.in
-    #   pre-commit
+    # via pre-commit
 virtualenv==20.26.6
     # via pre-commit
 
