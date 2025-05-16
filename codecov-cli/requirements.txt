@@ -16,6 +16,8 @@ idna==3.10
     # via requests
 ijson==3.3.0
     # via codecov-cli (pyproject.toml)
+pyyaml==6.0.2
+    # via codecov-cli (pyproject.toml)
 requests==2.32.3
     # via responses
 responses==0.21.0

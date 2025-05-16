@@ -42,7 +42,9 @@ pytest-env==1.1.0
 pytest-mock==3.11.1
     # via -r requirements.in
 pyyaml==6.0.2
-    # via pre-commit
+    # via
+    #   -r requirements.in
+    #   pre-commit
 virtualenv==20.26.6
     # via pre-commit
 

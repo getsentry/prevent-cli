@@ -12,6 +12,7 @@ maintainers = [
 description = "Codecov Command Line Interface"
 dependencies = [
     "click==8.*",
+    "pyyaml==6.*",
     "ijson==3.*",
     "responses==0.21.*",
     "sentry-sdk>=2.20.0",
