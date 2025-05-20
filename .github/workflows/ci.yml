@@ -111,7 +111,6 @@ jobs:
         if: ${{ !github.event.pull_request.head.repo.fork && github.repository_owner == 'getsentry' }}
         shell: bash
         run: |
-          source codecov-cli/.venv/bin/activate
           uv run --project codecov-cli codecovcli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
           uv run --project codecov-cli codecovcli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
 
