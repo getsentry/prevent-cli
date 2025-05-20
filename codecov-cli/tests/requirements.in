@@ -1,7 +1,0 @@
-pyyaml>=6.0.2
-pre-commit
-pytest
-pytest-asyncio
-pytest-cov
-pytest-env
-pytest-mock
