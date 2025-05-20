@@ -120,12 +120,13 @@ jobs:
       - name: Dogfooding codecov-cli
         if: ${{ !github.event.pull_request.head.repo.fork && github.repository_owner == 'getsentry' }}
         run: |
-          codecov-cli/.venv/bin/codecovcli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
-          codecov-cli/.venv/bin/codecovcli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
+          source codecov-cli/.venv/bin/activate || call codecov-cli/.venv/bin/activate.bat
+          codecovcli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
+          codecovcli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
 
       - name: Dogfooding sentry-prevent-cli
         if: ${{ !github.event.pull_request.head.repo.fork && github.repository_owner == 'getsentry' }}
         run: |
-          source prevent-cli/.venv/bin/activate
-          prevent-cli/.venv/bin/sentry-prevent-cli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag sentry-prevent-cli
-          prevent-cli/.venv/bin/sentry-prevent-cli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag sentry-prevent-cli
+          source prevent-cli/.venv/bin/activate || call prevent-cli/.venv/bin/activate.bat
+          sentry-prevent-cli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag sentry-prevent-cli
+          sentry-prevent-cli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag sentry-prevent-cli
