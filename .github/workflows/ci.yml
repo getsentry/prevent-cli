@@ -100,12 +100,10 @@ jobs:
           python -m pip install uv
           uv sync --project codecov-cli
           uv sync --project prevent-cli
-          uv build codecov-cli
-          uv build prevent-cli
 
       - name: Test with pytest
         run: |
-          uv run --project codecov-cli pytest --cov --junitxml=${{matrix.os}}-${{matrix.python-version}}junit.xml
+          cd codecov-cli && uv run pytest --cov --junitxml=${{matrix.os}}-${{matrix.python-version}}junit.xml
         env:
           CODECOV_ENV: test
 
