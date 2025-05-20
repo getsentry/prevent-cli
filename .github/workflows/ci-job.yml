@@ -39,7 +39,7 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./coverage.xml
+        files: ./codecov-cli/coverage.xml
         flags: python3.12
         fail_ci_if_error: true
         verbose: true

@@ -42,7 +42,7 @@ jobs:
 
       - name: Run command_dump
         run: |
-          ./command_dump.py
+          uv run ./command_dump.py
 
       - name: Detect changes on commit
         run: |
