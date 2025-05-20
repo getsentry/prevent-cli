@@ -123,10 +123,10 @@ requires-dist = [
 dev = [
     { name = "pre-commit", specifier = "==3.*" },
     { name = "pytest", specifier = "==7.*" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-cov" },
-    { name = "pytest-env" },
-    { name = "pytest-mock" },
+    { name = "pytest-asyncio", specifier = "==0.21.1" },
+    { name = "pytest-cov", specifier = "==4.*" },
+    { name = "pytest-env", specifier = "==1.*" },
+    { name = "pytest-mock", specifier = "==3.*" },
 ]
 
 [[package]]
