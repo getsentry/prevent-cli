@@ -119,6 +119,17 @@ requires-dist = [
     { name = "test-results-parser", specifier = "==0.5.4" },
 ]
 
+[package.metadata.requires-dev]
+dev = [
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "pytest", specifier = ">=6.0.2" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "pytest-env" },
+    { name = "pytest-mock" },
+]
+
 [[package]]
 name = "colorama"
 version = "0.4.6"
