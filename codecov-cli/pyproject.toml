@@ -16,7 +16,7 @@ dependencies = [
     "PyYAML==6.*",
     "responses==0.21.*",
     "sentry-sdk==2.*",
-    "test_results_parser==0.5.4",
+    "test-results-parser==0.5.4",
 ]
 license = {file = "LICENSE"}
 name = "codecov-cli"
@@ -40,8 +40,8 @@ packages = ["codecov_cli"]
 dev = [
     "pre-commit==3.*",
     "pytest==7.*",
-    "pytest-asyncio",
-    "pytest-cov",
-    "pytest-env",
-    "pytest-mock",
+    "pytest-asyncio==0.21.1",
+    "pytest-cov==4.*",
+    "pytest-env==1.*",
+    "pytest-mock==3.*",
 ]

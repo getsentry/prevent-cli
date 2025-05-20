@@ -107,14 +107,12 @@ jobs:
 
       - name: Dogfooding codecov-cli
         if: ${{ !github.event.pull_request.head.repo.fork && github.repository_owner == 'getsentry' }}
-        shell: bash
         run: |
           uv run --project codecov-cli codecovcli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
           uv run --project codecov-cli codecovcli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
 
       - name: Dogfooding sentry-prevent-cli
         if: ${{ !github.event.pull_request.head.repo.fork && github.repository_owner == 'getsentry' }}
-        shell: bash
         run: |
           uv run --project prevent-cli sentry-prevent-cli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag sentry-prevent-cli
           uv run --project prevent-cli sentry-prevent-cli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag sentry-prevent-cli
