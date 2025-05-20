@@ -36,12 +36,13 @@ env = [
 [tool.setuptools]
 packages = ["codecov_cli"]
 
-[tool.cibuildwheel]
-skip = ["pp*", "cp313-*"]
-test-command = "codecovcli --help"
-
-[tool.cibuildwheel.config-settings]
-pure-python = "true"
-
-[tool.cibuildwheel.environment]
-PIP_CONSTRAINT = "requirements.txt"
+[dependency-groups]
+dev = [
+    "pytest>=6.0.2",
+    "pre-commit",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-env",
+    "pytest-mock",
+]
