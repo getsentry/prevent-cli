@@ -24,4 +24,3 @@ packages = ["prevent_cli"]
 
 [tool.uv.sources]
 codecov-cli = {path = "../codecov-cli"}
-

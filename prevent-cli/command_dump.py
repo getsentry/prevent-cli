@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import subprocess
 
 
@@ -35,7 +34,7 @@ if __name__ == "__main__":
         subprocess.check_call(["codecovcli", "--help"], stdout=subprocess.DEVNULL)
     except Exception:
         print(
-            "codecovcli is not executable. You can install it with pip install -e codecov-cli"
+            "codecovcli is not executable. You can install it with uv sync --project prevent-cli"
         )
         exit(1)
 
@@ -45,9 +44,9 @@ if __name__ == "__main__":
         )
     except Exception:
         print(
-            "sentry-prevent-cli is not executable. You can install it with pip install -e prevent-cli"
+            "sentry-prevent-cli is not executable. You can install it with uv sync --project prevent-cli"
         )
         exit(1)
 
-    command_dump(["codecovcli"], "codecov-cli/codecovcli_commands")
-    command_dump(["sentry-prevent-cli"], "prevent-cli/preventcli_commands")
+    command_dump(["codecovcli"], "../codecov-cli/codecovcli_commands")
+    command_dump(["sentry-prevent-cli"], "preventcli_commands")

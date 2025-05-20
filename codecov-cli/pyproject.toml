@@ -12,10 +12,10 @@ maintainers = [
 description = "Codecov Command Line Interface"
 dependencies = [
     "click==8.*",
-    "pyyaml==6.*",
     "ijson==3.*",
+    "PyYAML==6.*",
     "responses==0.21.*",
-    "sentry-sdk>=2.20.0",
+    "sentry-sdk==2.*",
     "test-results-parser==0.5.4",
 ]
 license = {file = "LICENSE"}
@@ -36,12 +36,12 @@ env = [
 [tool.setuptools]
 packages = ["codecov_cli"]
 
-[tool.cibuildwheel]
-skip = ["pp*", "cp313-*"]
-test-command = "codecovcli --help"
-
-[tool.cibuildwheel.config-settings]
-pure-python = "true"
-
-[tool.cibuildwheel.environment]
-PIP_CONSTRAINT = "requirements.txt"
+[dependency-groups]
+dev = [
+    "pre-commit==3.*",
+    "pytest==7.*",
+    "pytest-asyncio==0.21.1",
+    "pytest-cov==4.*",
+    "pytest-env==1.*",
+    "pytest-mock==3.*",
+]

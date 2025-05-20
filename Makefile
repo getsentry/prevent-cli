@@ -23,6 +23,9 @@ lint:
 	make lint.install
 	make lint.run
 
+command_dump:
+	cd prevent-cli && uv run command_dump.py
+
 tag.release:
 ifeq ($(shell echo ${version} | egrep "${tag_regex}"),)
 	@echo "Version '${version}' is not a valid git tag.\nUsage: make tag.release version=v0.0.0"
