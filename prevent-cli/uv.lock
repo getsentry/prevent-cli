@@ -115,15 +115,14 @@ requires-dist = [
     { name = "ijson", specifier = "==3.*" },
     { name = "pyyaml", specifier = "==6.*" },
     { name = "responses", specifier = "==0.21.*" },
-    { name = "sentry-sdk", specifier = ">=2.20.0" },
+    { name = "sentry-sdk", specifier = "==2.*" },
     { name = "test-results-parser", specifier = "==0.5.4" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "pytest", specifier = ">=6.0.2" },
+    { name = "pre-commit", specifier = "==3.*" },
+    { name = "pytest", specifier = "==7.*" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
     { name = "pytest-env" },
