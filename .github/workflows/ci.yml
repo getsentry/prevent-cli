@@ -97,23 +97,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          # python -m pip install --upgrade pip
           python -m pip install uv
-          # pip install -r codecov-cli/requirements.txt
-          # python -m pip install -e codecov-cli
-          # python -m pip install -e prevent-cli
-          # pip install -r codecov-cli/tests/requirements.txt
           uv sync --project codecov-cli
           uv sync --project prevent-cli
           uv build codecov-cli
           uv build prevent-cli
-          # pip install codecov-cli/dist/*.whl
-          # pip install prevent-cli/dist/*.whl
 
       - name: Test with pytest
         run: |
-          cd codecov-cli
-          uv run pytest --cov --junitxml=${{matrix.os}}-${{matrix.python-version}}junit.xml
+          uv run --project codecov-cli pytest --cov --junitxml=${{matrix.os}}-${{matrix.python-version}}junit.xml
         env:
           CODECOV_ENV: test
 
@@ -122,13 +114,12 @@ jobs:
         shell: bash
         run: |
           source codecov-cli/.venv/bin/activate
-          codecovcli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
-          codecovcli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
+          uv run --project codecov-cli codecovcli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
+          uv run --project codecov-cli codecovcli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag codecovcli
 
       - name: Dogfooding sentry-prevent-cli
         if: ${{ !github.event.pull_request.head.repo.fork && github.repository_owner == 'getsentry' }}
         shell: bash
         run: |
-          source prevent-cli/.venv/bin/activate
-          sentry-prevent-cli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag sentry-prevent-cli
-          sentry-prevent-cli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag sentry-prevent-cli
+          uv run --project prevent-cli sentry-prevent-cli -v do-upload --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag sentry-prevent-cli
+          uv run --project prevent-cli sentry-prevent-cli do-upload --report-type test_results --fail-on-error -t ${{ secrets.CODECOV_TOKEN }} --plugin pycoverage --flag python${{matrix.python-version}} --flag sentry-prevent-cli
