@@ -122,7 +122,7 @@ jobs:
           -w ${{ github.workspace }} \
           --platform linux/${{ matrix.arch }} \
           ${{ matrix.distro }} \
-          ./codecov-cli/scripts/build_linux_arm.sh ${{ matrix.distro_name }}_${{ matrix.arch }}
+          ./codecov-cli/scripts/build_${{ matrix.distro_name }}_arm.sh ${{ matrix.distro_name }}_${{ matrix.arch }}
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4
