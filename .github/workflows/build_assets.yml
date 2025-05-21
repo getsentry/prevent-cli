@@ -60,9 +60,7 @@ jobs:
           uv sync
 
       - name: Build with pyinstaller for ${{matrix.TARGET}}
-        run: |
-          cd codecov-cli 
-          ${{matrix.CMD_BUILD}}
+        run: cd codecov-cli && ${{matrix.CMD_BUILD}}
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
