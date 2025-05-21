@@ -48,10 +48,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.13
+      - name: Set up Python 3.12
         uses: actions/setup-python@v3
         with:
-          python-version: "3.13"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -96,13 +96,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: "python:3.13-alpine"
+          - distro: "python:3.12-alpine"
             arch: arm64
             distro_name: alpine
-          - distro: "python:3.13-alpine"
+          - distro: "python:3.12-alpine"
             arch: x86_64
             distro_name: alpine
-          - distro: "python:3.13-bullseye"
+          - distro: "python:3.12-bullseye"
             arch: arm64
             distro_name: linux
 
