@@ -1,4 +1,6 @@
 #!/bin/sh
+apk add build-base
+#apk add musl-dev build-base
 cd codecov-cli
 pip install uv pyinstaller
 uv sync
