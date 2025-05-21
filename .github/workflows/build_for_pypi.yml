@@ -21,15 +21,12 @@ jobs:
           persist-credentials: false
 
       - name: Install dependencies
-        run: |
-          pip install build
+        run: pip install uv
 
       - name: Build src dist
         run: |
           cd codecov-cli
-          python -m build --sdist
-        env:
-          PIP_CONSTRAINT: requirements.txt
+          uv build --sdist
 
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4
