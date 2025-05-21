@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  build_src_for_pypi:
+  build_for_pypi:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,48 +23,19 @@ jobs:
       - name: Install dependencies
         run: pip install uv
 
-      - name: Build src dist
+      - name: Build sdist and bdist 
         run: |
           cd codecov-cli
-          uv build --sdist
+          uv build
 
-      - name: Store the distribution packages
+      - name: Store the source distribution
         uses: actions/upload-artifact@v4
         with:
-          name: cibw-sdist
+          name: codecov-cli-sdist
           path: ./**/*.tar.gz
 
-  build_dist_for_pypi:
-    needs:
-      - build_src_for_pypi
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os:
-          - macos-13
-          - macos-latest
-          - ubuntu-24.04-arm
-          - ubuntu-latest
-          - windows-latest
-    steps:
-      - name: Download the sdist
-        uses: actions/download-artifact@v4
-        with:
-          name: cibw-sdist
-
-      - name: Get sdist filename
-        id: get-sdist
-        run: |
-          echo "sdist_filename=$(ls codecov-cli/dist/)" >> "${GITHUB_OUTPUT}"
-        shell: bash
-        
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v2.22.0
-        with:
-          package-dir: codecov-cli/dist/${{ steps.get-sdist.outputs.sdist_filename }}
-
-      - name: Store the distribution packages
+      - name: Store the binary distribution
         uses: actions/upload-artifact@v4
         with:
-          name: cibw-wheels-${{ matrix.os }}
-          path: ./wheelhouse/*.whl
+          name: codecov-cli-bdist
+          path: ./**/*.whl
