@@ -15,17 +15,15 @@ jobs:
       id-token: write # This is required for requesting the JWT
       contents: read  # This is required for actions/checkout
     uses: ./.github/workflows/build_for_pypi.yml
-    with:
-      publish: false
     secrets: inherit
 
-  # buildassets:
-  #   name: Build packages
-  #   uses: ./.github/workflows/build_assets.yml
-  #   with:
-  #     release: false
-  #   secrets: inherit
-  #
+  buildassets:
+    name: Build packages
+    uses: ./.github/workflows/build_assets.yml
+    with:
+      release: false
+    secrets: inherit
+
   # publish_to_pypi:
   #   needs:
   #     - build_for_pypi

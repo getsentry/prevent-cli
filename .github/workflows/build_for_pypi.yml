@@ -3,11 +3,6 @@ name: Build for PyPi
 
 on:
   workflow_call:
-    inputs:
-      publish:
-        type: boolean
-        default: false
-        description: "Build for PyPi"
 
 permissions:
   contents: read

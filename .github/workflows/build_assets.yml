@@ -22,11 +22,6 @@ jobs:
         include:
           - os: macos-latest
             TARGET: macos
-            # currently, wrapt pulls the arm64 version instead of the universal one, so the below is a hack
-            CMD_REQS: >
-              mkdir -p pip-packages && cd pip-packages && pip wheel --no-cache-dir --no-binary ijson,charset_normalizer,PyYAML .. &&
-              rm $(ls | grep wrapt) && pip download wrapt --platform=universal2 --only-binary=:all: && pip install $(ls | grep wrapt) --force-reinstall && cd .. &&
-              pip install --no-deps --no-index --find-links=pip-packages pip-packages/*
             CMD_BUILD: >
               pyinstaller --copy-metadata codecov-cli --target-arch universal2 -F codecov_cli/main.py &&
               mv dist/main dist/codecovcli_macos &&
@@ -36,8 +31,6 @@ jobs:
 
           - os: ubuntu-22.04
             TARGET: ubuntu
-            CMD_REQS: >
-              pip install -r requirements.txt && pip install .
             CMD_BUILD: >
               pyinstaller --copy-metadata codecov-cli -F codecov_cli/main.py &&
               cp ./dist/main ./dist/codecovcli_linux
@@ -46,8 +39,6 @@ jobs:
 
           - os: windows-latest
             TARGET: windows
-            CMD_REQS: >
-              pip install -r requirements.txt && pip install .
             CMD_BUILD: >
               pyinstaller --copy-metadata codecov-cli -F codecov_cli\main.py &&
               Copy-Item -Path ".\dist\main.exe" -Destination ".\dist\codecovcli_windows.exe"
@@ -57,22 +48,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13
         uses: actions/setup-python@v3
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install dependencies
         run: |
+          pip install uv pyinstaller
           cd codecov-cli
-          ${{matrix.CMD_REQS}}
-          python setup.py build
-
-      - name: Install pyinstaller
-        run: pip install pyinstaller
+          uv sync
 
       - name: Build with pyinstaller for ${{matrix.TARGET}}
-        run: cd codecov-cli && ${{matrix.CMD_BUILD}}
+        run: |
+          cd codecov-cli 
+          ${{matrix.CMD_BUILD}}
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
@@ -106,13 +96,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: "python:3.11-alpine3.18"
+          - distro: "python:3.13-alpine"
             arch: arm64
             distro_name: alpine
-          - distro: "python:3.11-alpine3.18"
+          - distro: "python:3.13-alpine"
             arch: x86_64
             distro_name: alpine
-          - distro: "python:3.11-bullseye"
+          - distro: "python:3.13-bullseye"
             arch: arm64
             distro_name: linux
 
@@ -132,7 +122,7 @@ jobs:
           -w ${{ github.workspace }} \
           --platform linux/${{ matrix.arch }} \
           ${{ matrix.distro }} \
-          ./codecov-cli/scripts/build_${{ matrix.distro_name }}_arm.sh ${{ matrix.distro_name }}_${{ matrix.arch }}
+          ./codecov-cli/scripts/build_linux_arm.sh ${{ matrix.distro_name }}_${{ matrix.arch }}
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4

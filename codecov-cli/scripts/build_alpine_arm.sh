@@ -1,9 +1,6 @@
 #!/bin/sh
 cd codecov-cli
-apk add musl-dev build-base
-pip install -r requirements.txt
-pip install .
-python setup.py build
-pip install pyinstaller
+pip install uv pyinstaller
+uv sync
 pyinstaller --copy-metadata codecov-cli -F codecov_cli/main.py
 cp ./dist/main ./dist/codecovcli_$1
