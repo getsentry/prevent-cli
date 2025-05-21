@@ -28,14 +28,8 @@ jobs:
           cd codecov-cli
           uv build
 
-      - name: Store the source distribution
+      - name: Store the distributions
         uses: actions/upload-artifact@v4
         with:
-          name: codecov-cli-sdist
-          path: ./**/*.tar.gz
-
-      - name: Store the binary distribution
-        uses: actions/upload-artifact@v4
-        with:
-          name: codecov-cli-bdist
-          path: ./**/*.whl
+          name: codecov-cli-dist
+          path: ./codecov-cli/dist/*
