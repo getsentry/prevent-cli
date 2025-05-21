@@ -23,7 +23,7 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-              pyinstaller --copy-metadata codecov-cli --target-arch universal2 -F codecov_cli/main.py &&
+              pyinstaller --target-arch universal2 main.spec &&
               mv dist/main dist/codecovcli_macos &&
               lipo -archs dist/codecovcli_macos | grep 'x86_64 arm64'
             OUT_FILE_NAME: codecovcli_macos
@@ -32,7 +32,7 @@ jobs:
           - os: ubuntu-22.04
             TARGET: ubuntu
             CMD_BUILD: >
-              pyinstaller --copy-metadata codecov-cli -F codecov_cli/main.py &&
+              pyinstaller main.spec &&
               cp ./dist/main ./dist/codecovcli_linux
             OUT_FILE_NAME: codecovcli_linux
             ASSET_MIME: application/octet-stream
@@ -40,7 +40,7 @@ jobs:
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: >
-              pyinstaller --copy-metadata codecov-cli -F codecov_cli\main.py &&
+              pyinstaller main.spec &&
               Copy-Item -Path ".\dist\main.exe" -Destination ".\dist\codecovcli_windows.exe"
             OUT_FILE_NAME: codecovcli_windows.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
