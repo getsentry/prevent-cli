@@ -1,3 +1,0 @@
-[tool.pip-tools]
-all-build-deps = true
-all-extras = true
