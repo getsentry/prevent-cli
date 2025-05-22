@@ -24,7 +24,7 @@ lint:
 	make lint.run
 
 command_dump:
-	uv run --project prevent-cli prevent-cli/command_dump.py
+	cd prevent-cli && uv run command_dump.py
 
 tag.release:
 ifeq ($(shell echo ${version} | egrep "${tag_regex}"),)
