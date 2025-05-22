@@ -46,7 +46,7 @@ jobs:
       - name: Detect changes on commit
         run: |
           if [ -n "$(git diff codecov-cli/codecovcli_commands prevent-cli/preventcli_commands)" ]; then
-            echo "Please run `python command_dump.py` before submitting, or install the hooks"
+            echo "Please run `make command_dump` before submitting, or install the hooks"
             echo "$(git diff codecov-cli/codecovcli_commands prevent-cli/preventcli_commands)"
             exit 1
           fi
@@ -94,7 +94,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install uv
+          pip install uv
           uv sync --project codecov-cli
           uv sync --project prevent-cli
 
