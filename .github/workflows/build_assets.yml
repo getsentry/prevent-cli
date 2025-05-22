@@ -20,13 +20,20 @@ jobs:
       fail-fast: true
       matrix:
         include:
+          - os: macos-13
+            TARGET: macos
+            CMD_BUILD: >
+              uv run pyinstaller -F codecov_cli/main.py &&
+              mv dist/main dist/codecovcli_macos_x86_64
+            OUT_FILE_NAME: codecovcli_macos_x86_64
+            ASSET_MIME: application/octet-stream
+
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
               uv run pyinstaller -F codecov_cli/main.py &&
-              mv dist/main dist/codecovcli_macos &&
-              lipo -archs dist/codecovcli_macos | grep 'x86_64 arm64'
-            OUT_FILE_NAME: codecovcli_macos
+              mv dist/main dist/codecovcli_macos_arm64
+            OUT_FILE_NAME: codecovcli_macos_arm64
             ASSET_MIME: application/octet-stream
 
           - os: ubuntu-22.04
