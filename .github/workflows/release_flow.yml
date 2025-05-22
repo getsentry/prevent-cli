@@ -175,7 +175,7 @@ jobs:
 
   publish_release:
     name: Publish release
-    needs: [build_assets, build_assets_alpine_arm, publish_to_pypi]
+    needs: [build_assets, build_assets_alpine_arm, build_and_publish_to_pypi]
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
