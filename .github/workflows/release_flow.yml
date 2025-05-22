@@ -175,6 +175,7 @@ jobs:
 
   publish_release:
     name: Publish release
+    if: false # todo change to true
     needs: [build_assets, build_assets_alpine_arm, build_and_publish_to_pypi]
     runs-on: ubuntu-latest
     permissions:
