@@ -10,71 +10,188 @@ permissions:
   contents: read
 
 jobs:
-  build_for_pypi:
+  build_and_publish_to_pypi:
     permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
-    uses: ./.github/workflows/build_for_pypi.yml
-    secrets: inherit
+      id-token: write  # This is required for OIDC
+      contents: read
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/codecov-cli
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-  buildassets:
-    name: Build packages
-    uses: ./.github/workflows/build_assets.yml
-    with:
-      release: false
-    secrets: inherit
+      - name: Install dependencies
+        run: pip install uv
 
-  # publish_to_pypi:
-  #   needs:
-  #     - build_for_pypi
-  #   permissions:
-  #     id-token: write  # This is required for OIDC
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: pypi
-  #     url: https://pypi.org/p/codecov-cli
-  #   steps:
-  #     - name: Download artifacts
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         path: dist/
-  #         pattern: cibw-*
-  #
-  #     - name: Display and move artifacts
-  #       run: |
-  #         ls -alrt */*/*
-  #         mv */*/*/* dist/
-  #         mv */*/* dist/
-  #         echo "Moved files"
-  #         ls -alrt */*
-  #         echo "Deleting empty directories"
-  #         find . -empty -type d -delete
-  #         ls -alrt */*
-  #
-  #     - name: Publish package to PyPi
-  #       uses: pypa/gh-action-pypi-publish@release/v1
-  #       with:
-  #         verbose: true
-  #
-  # publish_release:
-  #   name: Publish release
-  #   needs: [buildassets, publish_to_pypi]
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: 'read'
-  #     id-token: 'write'
-  #   steps:
-  #     - id: 'auth'
-  #       name: 'Authenticate to Google Cloud'
-  #       uses: 'google-github-actions/auth@v1.0.0'
-  #       with:
-  #         create_credentials_file: 'true'
-  #         workload_identity_provider: ${{ secrets.CODECOV_GCP_WIDP }}
-  #         service_account: ${{ secrets.CODECOV_GCP_WIDSA }}
-  #
-  #     # Publish the release tag to a Pub/Sub topic
-  #     - name: Publish a message to a Pub/Sub topic
-  #       env:
-  #         CLOUDSDK_CORE_PROJECT: ${{ secrets.GCLOUD_UPLOADER_PROJECT_ID }}
-  #       run: |
-  #         gcloud pubsub topics publish ${{ secrets.GCLOUD_UPLOADER_PUBSUB_TOPIC }} --message '{"release":"'"${{ github.ref_name }}"'", "latest":true}'
+      - name: Build sdist and bdist 
+        run: |
+          cd codecov-cli
+          uv build
+
+      - name: Publish package to PyPi
+        if: false #change to true
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
+
+  build_assets:
+    name: Build packages - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - os: macos-latest
+            TARGET: macos
+            CMD_BUILD: >
+              uv run pyinstaller --target-arch universal2 -F codecov_cli/main.py &&
+              mv dist/main dist/codecovcli_macos_x86_64
+            OUT_FILE_NAME: codecovcli_macos
+            ASSET_MIME: application/octet-stream
+
+          - os: ubuntu-22.04
+            TARGET: ubuntu
+            CMD_BUILD: >
+              uv run pyinstaller -F codecov_cli/main.py &&
+              cp ./dist/main ./dist/codecovcli_linux
+            OUT_FILE_NAME: codecovcli_linux
+            ASSET_MIME: application/octet-stream
+
+          - os: windows-latest
+            TARGET: windows
+            CMD_BUILD: >
+              uv run pyinstaller -F codecov_cli\main.py &&
+              Copy-Item -Path ".\dist\main.exe" -Destination ".\dist\codecovcli_windows.exe"
+            OUT_FILE_NAME: codecovcli_windows.exe
+            ASSET_MIME: application/vnd.microsoft.portable-executable
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          pip install uv
+          cd codecov-cli
+          # Need to build pyyaml and ijson from sdists to get universal2 macos build to work
+          uv sync --no-binary-package pyyaml --no-binary-package ijson 
+          uv add --dev pyinstaller
+
+      - name: Build with pyinstaller for ${{matrix.TARGET}}
+        run: cd codecov-cli && ${{matrix.CMD_BUILD}}
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4
+        if: inputs.release == false
+        with:
+          name: ${{ matrix.OUT_FILE_NAME }}
+          path: ./codecov-cli/dist/${{ matrix.OUT_FILE_NAME }}
+
+      - name: Get auth token
+        if: inputs.release == true
+        id: token
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
+        with:
+          app-id: ${{ vars.SENTRY_RELEASE_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.SENTRY_RELEASE_BOT_PRIVATE_KEY }}
+
+      - name: Upload Release Asset
+        if: inputs.release == true
+        id: upload-release-asset
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ steps.token.outputs.token }}
+          file: ./codecov-cli/dist/${{ matrix.OUT_FILE_NAME }}
+          asset_name: ${{ matrix.OUT_FILE_NAME }}
+          tag: ${{ github.ref }}
+          overwrite: true
+
+  build_assets_alpine_arm:
+    name: Build assets - Alpine and ARM
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - distro: "python:3.12-alpine"
+            arch: arm64
+            distro_name: alpine
+          - distro: "python:3.12-alpine"
+            arch: x86_64
+            distro_name: alpine
+          - distro: "python:3.12-bullseye"
+            arch: arm64
+            distro_name: linux
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      with:
+        platforms: ${{ matrix.arch }}
+
+    - name: Run in Docker
+      run: |
+        docker run \
+          --rm \
+          -v $(pwd):/${{ github.workspace }} \
+          -w ${{ github.workspace }} \
+          --platform linux/${{ matrix.arch }} \
+          ${{ matrix.distro }} \
+          ./codecov-cli/scripts/build_${{ matrix.distro_name }}_arm.sh ${{ matrix.distro_name }}_${{ matrix.arch }}
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4
+      if: false # todo change to true
+      with:
+        name: codecovcli_${{ matrix.distro_name }}_${{ matrix.arch }}
+        path: ./codecov-cli/dist/codecovcli_${{ matrix.distro_name }}_${{ matrix.arch }}
+
+    - name: Get auth token
+      if: false # todo change to true 
+      id: token
+      uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
+      with:
+        app-id: ${{ vars.SENTRY_RELEASE_BOT_CLIENT_ID }}
+        private-key: ${{ secrets.SENTRY_RELEASE_BOT_PRIVATE_KEY }}
+
+    - name: Upload Release Asset
+      if: false # todo change to true
+      id: upload-release-asset
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ steps.token.outputs.token }}
+        file: ./codecov-cli/dist/codecovcli_${{ matrix.distro_name }}_${{ matrix.arch }}
+        asset_name: codecovcli_${{ matrix.distro_name }}_${{ matrix.arch }}
+        tag: ${{ github.ref }}
+        overwrite: true
+
+  publish_release:
+    name: Publish release
+    needs: [buildassets, publish_to_pypi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1.0.0'
+        with:
+          create_credentials_file: 'true'
+          workload_identity_provider: ${{ secrets.CODECOV_GCP_WIDP }}
+          service_account: ${{ secrets.CODECOV_GCP_WIDSA }}
+
+      # Publish the release tag to a Pub/Sub topic
+      - name: Publish a message to a Pub/Sub topic
+        env:
+          CLOUDSDK_CORE_PROJECT: ${{ secrets.GCLOUD_UPLOADER_PROJECT_ID }}
+        run: |
+          gcloud pubsub topics publish ${{ secrets.GCLOUD_UPLOADER_PUBSUB_TOPIC }} --message '{"release":"'"${{ github.ref_name }}"'", "latest":true}'
