@@ -23,7 +23,7 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-              rm -r .venv && uv sync --no-binary && uv run pyinstaller --target-arch universal2 -F codecov_cli/main.py &&
+              uv run pyinstaller -F codecov_cli/main.py &&
               mv dist/main dist/codecovcli_macos &&
               lipo -archs dist/codecovcli_macos | grep 'x86_64 arm64'
             OUT_FILE_NAME: codecovcli_macos
