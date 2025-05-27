@@ -3,6 +3,7 @@ name = "prevent-cli"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+license-files = ["LICENSE"]
 authors = [
     { name = "joseph-sentry", email = "joseph.sawaya@sentry.io" }
 ]
