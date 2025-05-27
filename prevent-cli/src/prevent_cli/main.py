@@ -39,6 +39,12 @@ logger = logging.getLogger("codecovcli")
     default=None,
 )
 @click.option(
+    "--codecov-yml-path",
+    hidden=True,
+    type=click.Path(path_type=pathlib.Path),
+    default=None,
+)
+@click.option(
     "--enterprise-url", "--url", "-u", help="Change the upload host (Enterprise use)"
 )
 @click.option("-v", "--verbose", "verbose", help="Use verbose logging", is_flag=True)
@@ -50,7 +56,8 @@ logger = logging.getLogger("codecovcli")
 def cli(
     ctx: click.Context,
     auto_load_params_from: typing.Optional[str],
-    yml_path: pathlib.Path,
+    yml_path: pathlib.Path | None,
+    codecov_yml_path: pathlib.Path | None,
     enterprise_url: str,
     verbose: bool = False,
     disable_telem: bool = False,
@@ -62,7 +69,7 @@ def cli(
     ctx.help_option_names = ["-h", "--help"]
     ctx.obj["ci_adapter"] = get_ci_adapter(auto_load_params_from)
     ctx.obj["versioning_system"] = get_versioning_system()
-    ctx.obj["yaml"] = load_cli_config(yml_path)
+    ctx.obj["yaml"] = load_cli_config(yml_path or codecov_yml_path)
     if ctx.obj["yaml"] is None:
         logger.debug("No yaml found")
     else:
