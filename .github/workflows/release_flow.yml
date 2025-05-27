@@ -4,19 +4,16 @@ on:
   release:
     types:
       - created
+  push:
 
 permissions:
   contents: read
 
 jobs:
-  build_and_publish_to_pypi:
+  build_for_pypi:
     permissions:
-      id-token: write  # This is required for OIDC
       contents: read
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/codecov-cli
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,11 +27,33 @@ jobs:
           cd codecov-cli
           uv build
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./codecov-cli/dist/*
+
+  publish_to_pypi:
+    permissions:
+      id-token: write  # This is required for OIDC
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/codecov-cli
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: codecov-cli/dist
+
+      - run: ls -lah codecov-cli/dist
+
       - name: Publish package to PyPi
+        if: false
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           verbose: true
-          packages-dir: "codecov-cli/dist"
+          packages-dir: codecov-cli/dist
+
 
   build_assets:
     name: Build packages - ${{ matrix.os }}
@@ -70,10 +89,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.12
+      - name: Set up Python 3.11
         uses: actions/setup-python@v3
         with:
-          python-version: "3.12"
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
@@ -94,6 +113,7 @@ jobs:
 
       - name: Get auth token
         id: token
+        if: false
         uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
         with:
           app-id: ${{ vars.SENTRY_RELEASE_BOT_CLIENT_ID }}
@@ -102,6 +122,7 @@ jobs:
       - name: Upload Release Asset
         id: upload-release-asset
         uses: svenstaro/upload-release-action@v2
+        if: false
         with:
           repo_token: ${{ steps.token.outputs.token }}
           file: ./codecov-cli/dist/${{ matrix.OUT_FILE_NAME }}
@@ -115,13 +136,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: "python:3.12-alpine"
+          - distro: "python:3.11-alpine"
             arch: arm64
             distro_name: alpine
-          - distro: "python:3.12-alpine"
+          - distro: "python:3.11-alpine"
             arch: x86_64
             distro_name: alpine
-          - distro: "python:3.12-bullseye"
+          - distro: "python:3.11-bullseye"
             arch: arm64
             distro_name: linux
 
@@ -151,6 +172,7 @@ jobs:
 
     - name: Get auth token
       id: token
+      if: false
       uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
       with:
         app-id: ${{ vars.SENTRY_RELEASE_BOT_CLIENT_ID }}
@@ -158,6 +180,7 @@ jobs:
 
     - name: Upload Release Asset
       id: upload-release-asset
+      if: false
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ steps.token.outputs.token }}
@@ -169,6 +192,7 @@ jobs:
   publish_release:
     name: Publish release
     needs: [build_assets, build_assets_alpine_arm, build_and_publish_to_pypi]
+    if: false
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
