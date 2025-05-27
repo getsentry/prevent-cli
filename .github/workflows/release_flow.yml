@@ -30,6 +30,7 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: pypi
           path: ./codecov-cli/dist/*
 
   publish_to_pypi:
@@ -43,6 +44,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
+          name: pypi
           path: codecov-cli/dist
 
       - run: ls -lah codecov-cli/dist
