@@ -30,10 +30,6 @@ jobs:
           cd codecov-cli
           uv build
 
-      - run: ls -lah
-      - run: ls -lah codecov-cli
-      - run: ls -lah codecov-cli/dist
-
       - name: Publish package to PyPi
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
