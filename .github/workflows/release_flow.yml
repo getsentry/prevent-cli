@@ -34,6 +34,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           verbose: true
+          packages-dir: "codecov-cli/dist"
 
   build_assets:
     name: Build packages - ${{ matrix.os }}
