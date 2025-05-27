@@ -34,6 +34,7 @@ jobs:
           path: ./codecov-cli/dist/*
 
   publish_to_pypi:
+    needs: build_for_pypi
     permissions:
       id-token: write  # This is required for OIDC
     runs-on: ubuntu-latest
