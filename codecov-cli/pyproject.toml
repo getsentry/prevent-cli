@@ -7,20 +7,17 @@ authors = [{ name = "Sentry", email = "oss@sentry.io" }]
 description = "Codecov Command Line Interface"
 dependencies = [
     "click==8.*",
-    "httpx==0.27.*",
     "ijson==3.*",
-    "pyyaml==6.*",
-    "regex",
+    "PyYAML==6.*",
     "responses==0.21.*",
-    "sentry-sdk>=2.20.0",
+    "sentry-sdk==2.*",
     "test-results-parser==0.5.4",
-    "wrapt>=1.17.2",
 ]
 license = { file = "LICENSE" }
 name = "codecov-cli"
 readme = "README.md"
 requires-python = ">= 3.9"
-version = "11.0.0"
+version = "10.4.0"
 
 [project.scripts]
 codecov = "codecov_cli.main:run"
@@ -32,12 +29,12 @@ env = ["CODECOV_ENV=test"]
 [tool.setuptools]
 packages = ["codecov_cli"]
 
-[tool.cibuildwheel]
-skip = ["pp*", "cp313-*"]
-test-command = "codecovcli --help"
-
-[tool.cibuildwheel.config-settings]
-pure-python = "true"
-
-[tool.cibuildwheel.environment]
-PIP_CONSTRAINT = "requirements.txt"
+[dependency-groups]
+dev = [
+    "pre-commit==3.*",
+    "pytest==7.*",
+    "pytest-asyncio==0.21.1",
+    "pytest-cov==4.*",
+    "pytest-env==1.*",
+    "pytest-mock==3.*",
+]

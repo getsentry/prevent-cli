@@ -6,6 +6,9 @@ on:
       - main
     types: [closed]
 
+permissions:
+  contents: read
+
 jobs:
   create-release:
     if: ${{ github.event.pull_request.merged == true && startsWith(github.head_ref, 'release/') && github.repository_owner == 'getsentry' }}
