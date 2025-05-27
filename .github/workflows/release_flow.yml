@@ -4,6 +4,7 @@ on:
   release:
     types:
       - created
+  push:
 
 permissions:
   contents: read
@@ -30,12 +31,19 @@ jobs:
           cd codecov-cli
           uv build
 
+      - run: ls -lah
+      - run: ls -lah codecov-cli
+      - run: ls -lah codecov-cli/dist
+
       - name: Publish package to PyPi
+        if: false
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           verbose: true
+          packages-dir: "codecov-cli/dist"
 
   build_assets:
+    if: false
     name: Build packages - ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -109,6 +117,7 @@ jobs:
           overwrite: true
 
   build_assets_alpine_arm:
+    if: false
     name: Build assets - Alpine and ARM
     runs-on: ubuntu-latest
     strategy:
@@ -166,6 +175,7 @@ jobs:
         overwrite: true
 
   publish_release:
+    if: false
     name: Publish release
     needs: [build_assets, build_assets_alpine_arm, build_and_publish_to_pypi]
     runs-on: ubuntu-latest
