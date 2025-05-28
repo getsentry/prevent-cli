@@ -52,10 +52,13 @@ jobs:
         uses: thomaseizinger/create-pull-request@1.3.1
         with:
           github_token: ${{ steps.token.outputs.token }}
-          head: release/${{ github.event.inputs.versionName }}
+          head: release/$VERSION_NAME
           base: main
-          title: Release ${{ github.event.inputs.versionName }}
-          reviewers: ${{ github.event.issue.user.login }}
+          title: Release $VERSION_NAME
+          reviewers: $USER_LOGIN
           body: |
-            Release PR for ${{ github.event.inputs.versionName }}
+            Release PR for $VERSION_NAME
             I've updated the version name and committed: ${{ steps.make-commit.outputs.commit }}.
+        env:
+          VERSION_NAME: "meow"
+          USER_LOGIN: "thomasrockhu-codecov"
