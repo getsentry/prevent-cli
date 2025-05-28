@@ -1,5 +1,6 @@
 #!/bin/sh
-apt install build-essential python3 python3-pip
+apt update
+apt install -y build-essential python3 python3-pip
 cd codecov-cli
 pip install uv --break-system-packages
 uv sync
