@@ -32,7 +32,7 @@ jobs:
         id: make-commit
         run: |
           cd codecov-cli
-          sed -i 's/version\ =\ "[0-9]\+\.[0-9]\+\.[0-9]\+"/version\ =\ "$VERSION_NAME"/g' pyproject.toml
+          sed -i "s/version\ =\ \"[0-9]\+\.[0-9]\+\.[0-9]\+\"/version\ =\ \"$VERSION_NAME\"/g" pyproject.toml
           git add pyproject.toml
           git commit --message "Prepare release $VERSION_NAME"
           echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
