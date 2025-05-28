@@ -169,8 +169,8 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ steps.token.outputs.token }}
+        file_glob: true
         file: ./codecov-cli/dist/codecovcli_*
-        asset_name: codecovcli_${{ matrix.distro_name }}_${{ matrix.arch }}
         tag: ${{ github.ref }}
         overwrite: true
 
