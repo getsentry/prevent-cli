@@ -2,7 +2,7 @@
 apt update
 apt install -y build-essential python3 python3-pip
 cd codecov-cli
-pip install uv --break-system-packages
+pip install uv
 uv sync
 uv add --dev pyinstaller
 uv run pyinstaller -F codecov_cli/main.py
