@@ -9,14 +9,10 @@ permissions:
   contents: read
 
 jobs:
-  build_and_publish_to_pypi:
+  build_for_pypi:
     permissions:
-      id-token: write  # This is required for OIDC
       contents: read
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/codecov-cli
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,11 +26,33 @@ jobs:
           cd codecov-cli
           uv build
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pypi
+          path: ./codecov-cli/dist/*
+
+  publish_to_pypi:
+    needs: build_for_pypi
+    permissions:
+      id-token: write  # This is required for OIDC
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/codecov-cli
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: pypi
+          path: codecov-cli/dist
+
       - name: Publish package to PyPi
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           verbose: true
-          packages-dir: "codecov-cli/dist"
+          packages-dir: codecov-cli/dist
+
 
   build_assets:
     name: Build packages - ${{ matrix.os }}
@@ -70,10 +88,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.12
+      - name: Set up Python 3.11
         uses: actions/setup-python@v3
         with:
-          python-version: "3.12"
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
@@ -85,12 +103,6 @@ jobs:
 
       - name: Build with pyinstaller for ${{matrix.TARGET}}
         run: cd codecov-cli && ${{matrix.CMD_BUILD}}
-
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.OUT_FILE_NAME }}
-          path: ./codecov-cli/dist/${{ matrix.OUT_FILE_NAME }}
 
       - name: Get auth token
         id: token
@@ -115,13 +127,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - distro: "python:3.12-alpine"
+          - distro: "python:3.11-alpine"
             arch: arm64
             distro_name: alpine
-          - distro: "python:3.12-alpine"
+          - distro: "python:3.11-alpine"
             arch: x86_64
             distro_name: alpine
-          - distro: "python:3.12-bullseye"
+          - distro: "python:3.11-bullseye"
             arch: arm64
             distro_name: linux
 
@@ -143,12 +155,6 @@ jobs:
           ${{ matrix.distro }} \
           ./codecov-cli/scripts/build_${{ matrix.distro_name }}_arm.sh ${{ matrix.distro_name }}_${{ matrix.arch }}
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: codecovcli_${{ matrix.distro_name }}_${{ matrix.arch }}
-        path: ./codecov-cli/dist/codecovcli_${{ matrix.distro_name }}_${{ matrix.arch }}
-
     - name: Get auth token
       id: token
       uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
@@ -168,7 +174,7 @@ jobs:
 
   publish_release:
     name: Publish release
-    needs: [build_assets, build_assets_alpine_arm, build_and_publish_to_pypi]
+    needs: [build_assets, build_assets_alpine_arm, build_for_pypi, publish_to_pypi]
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
