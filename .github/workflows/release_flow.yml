@@ -69,14 +69,6 @@ jobs:
             OUT_FILE_NAME: codecovcli_macos
             ASSET_MIME: application/octet-stream
 
-          - os: ubuntu-22.04
-            TARGET: ubuntu
-            CMD_BUILD: >
-              uv run pyinstaller -F codecov_cli/main.py &&
-              mv ./dist/main ./dist/codecovcli_linux
-            OUT_FILE_NAME: codecovcli_linux
-            ASSET_MIME: application/octet-stream
-
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: >
@@ -121,21 +113,24 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
 
-  build_assets_alpine_arm:
-    name: Build assets - Alpine and ARM
+  build_linux_assets:
+    name: Build Linux assets - glibc and musl, arm64 and x86_64
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
-          - distro: "python:3.11-alpine"
+          - distro: "alpine:3.21"
             arch: arm64
             distro_name: alpine
-          - distro: "python:3.11-alpine"
+          - distro: "alpine:3.21"
             arch: x86_64
             distro_name: alpine
-          - distro: "python:3.11-bullseye"
+          - distro: "ubuntu:20.04"
             arch: arm64
             distro_name: linux
+          - distro: "ubuntu:20.04" # 20.04 needed for glibc 2.31 compatibility
+            distro_name: linux
+            arch: x86_64
 
     steps:
     - uses: actions/checkout@v4
@@ -153,7 +148,14 @@ jobs:
           -w ${{ github.workspace }} \
           --platform linux/${{ matrix.arch }} \
           ${{ matrix.distro }} \
-          ./codecov-cli/scripts/build_${{ matrix.distro_name }}_arm.sh ${{ matrix.distro_name }}_${{ matrix.arch }}
+          ./codecov-cli/scripts/build_${{ matrix.distro_name }}.sh ${{ matrix.distro_name }}_${{ matrix.arch }}
+
+    # # Useful for testing
+    # - name: Upload build artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: codecovcli_${{ matrix.distro_name }}_${{ matrix.arch }}
+    #     path: ./codecov-cli/dist/codecovcli_*
 
     - name: Get auth token
       id: token
@@ -174,7 +176,7 @@ jobs:
 
   publish_release:
     name: Publish release
-    needs: [build_assets, build_assets_alpine_arm, build_for_pypi, publish_to_pypi]
+    needs: [build_assets, build_linux_assets, build_for_pypi, publish_to_pypi]
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
