@@ -3,7 +3,7 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt install -y tzdata
 apt install -y python3.9 python3.9-dev python3-pip
 cd codecov-cli
-python3.9 -m pip install uv
+python3.9 -m pip install uv --only-binary uv
 uv python pin 3.9
 uv sync
 uv add --dev pyinstaller
