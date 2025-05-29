@@ -1,8 +1,13 @@
 #!/bin/sh
-apk add build-base python3 py3-pip
+apk add build-base python3 py3-pip curl
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/astral-sh/uv/releases/download/0.7.8/uv-installer.sh > uv-installer.sh
+# Added sanity check file has not been tampered with
+if sha256sum -c ./codecov-cli/scripts/uv-installer-0.7.8.sha256sum; then
+    sh uv-installer.sh
+fi
 cd codecov-cli
-pip install uv --break-system-packages
-uv sync
-uv add --dev pyinstaller
-uv run pyinstaller -F codecov_cli/main.py
+/root/.local/bin/uv python pin 3.9 # we need to build with python 3.9 to support systems with libpython >= 3.9
+/root/.local/bin/uv sync
+/root/.local/bin/uv add --dev pyinstaller
+/root/.local/bin/uv run pyinstaller -F codecov_cli/main.py
 mv ./dist/main ./dist/codecovcli_$1

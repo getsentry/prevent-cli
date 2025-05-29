@@ -1,8 +1,10 @@
 #!/bin/sh
 apt update
-apt install -y build-essential python3 python3-pip
+DEBIAN_FRONTEND=noninteractive apt install -y tzdata
+apt install -y python3.9 python3.9-dev python3-pip
 cd codecov-cli
-pip install uv
+python3.9 -m pip install uv --only-binary uv
+uv python pin 3.9 # we need to build with python 3.9 to support systems with libpython >= 3.9
 uv sync
 uv add --dev pyinstaller
 uv run pyinstaller -F codecov_cli/main.py
