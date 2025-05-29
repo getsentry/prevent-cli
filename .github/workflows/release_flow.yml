@@ -55,7 +55,7 @@ jobs:
           packages-dir: codecov-cli/dist
 
   build_assets:
-    name: Build packages - ${{ matrix.os }}
+    name: Build ${{ matrix.os }} binary
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -116,7 +116,7 @@ jobs:
           overwrite: true
 
   build_linux_assets:
-    name: Build Linux assets - glibc and musl, arm64 and x86_64
+    name: Build ${{ matrix.distro_name }}_${{ matrix.arch }} binary
     runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
