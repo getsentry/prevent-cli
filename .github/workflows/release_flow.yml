@@ -117,30 +117,29 @@ jobs:
 
   build_linux_assets:
     name: Build Linux assets - glibc and musl, arm64 and x86_64
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
         include:
           - distro: "alpine:3.14" # alpine 3.14 needed for musl 1.2.2 and python 3.9 compatibility
             arch: arm64
             distro_name: alpine
+            runs-on: ubuntu-24.04-arm
           - distro: "alpine:3.14"
             arch: x86_64
             distro_name: alpine
+            runs-on: ubuntu-24.04
           - distro: "ubuntu:20.04" # ubuntu 20.04 needed for glibc 2.31 and python 3.9 compatibility
             arch: arm64
             distro_name: linux
+            runs-on: ubuntu-24.04-arm
           - distro: "ubuntu:20.04"
             distro_name: linux
             arch: x86_64
+            runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-        with:
-          platforms: ${{ matrix.arch }}
 
       - name: Run in Docker
         run: |
