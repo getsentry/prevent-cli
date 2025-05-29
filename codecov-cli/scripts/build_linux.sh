@@ -1,8 +1,9 @@
 #!/bin/sh
 apt update
-apt install -y build-essential python3 python3-pip
+apt install -y python3.9 python3.9-dev python3-pip
 cd codecov-cli
-pip install uv
+python3.9 -m pip install uv
+uv python pin 3.9
 uv sync
 uv add --dev pyinstaller
 uv run pyinstaller -F codecov_cli/main.py
