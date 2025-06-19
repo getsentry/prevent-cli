@@ -69,13 +69,13 @@ def cli(
     ctx.help_option_names = ["-h", "--help"]
     ctx.obj["ci_adapter"] = get_ci_adapter(auto_load_params_from)
     ctx.obj["versioning_system"] = get_versioning_system()
-    ctx.obj["yaml"] = load_cli_config(yml_path or codecov_yml_path)
-    if ctx.obj["yaml"] is None:
+    ctx.obj["codecov_yaml"] = load_cli_config(yml_path or codecov_yml_path)
+    if ctx.obj["codecov_yaml"] is None:
         logger.debug("No yaml found")
     else:
-        token = ctx.obj["yaml"].get("codecov", {}).get("token") or ctx.obj["yaml"].get(
-            "prevent", {}
-        ).get("token")
+        token = ctx.obj["codecov_yaml"].get("codecov", {}).get("token") or ctx.obj[
+            "codecov_yaml"
+        ].get("prevent", {}).get("token")
         if token is not None:
             ctx.default_map = {ctx.invoked_subcommand: {"token": token}}
     ctx.obj["enterprise_url"] = enterprise_url
