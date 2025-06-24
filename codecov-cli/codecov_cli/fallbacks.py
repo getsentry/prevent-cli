@@ -42,7 +42,7 @@ class CodecovOption(click.Option):
 
 
 class BrandedOption(click.Option):
-    def resolve_envvar_value(self, ctx: click.Context) -> str | None:
+    def resolve_envvar_value(self, ctx: click.Context) -> typing.Optional[str]:
         actual_var = self.envvar
         self.envvar = [
             f"{brand.value.upper()}_{actual_var}" for brand in ctx.obj["branding"]
