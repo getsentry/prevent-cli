@@ -56,8 +56,8 @@ logger = logging.getLogger("codecovcli")
 def cli(
     ctx: click.Context,
     auto_load_params_from: typing.Optional[str],
-    yml_path: pathlib.Path | None,
-    codecov_yml_path: pathlib.Path | None,
+    yml_path: typing.Optional[pathlib.Path],
+    codecov_yml_path: typing.Optional[pathlib.Path],
     enterprise_url: str,
     verbose: bool = False,
     disable_telem: bool = False,
