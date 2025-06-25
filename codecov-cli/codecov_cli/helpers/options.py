@@ -1,6 +1,11 @@
 import click
 
-from codecov_cli.fallbacks import CodecovOption, FallbackFieldEnum
+from codecov_cli.fallbacks import (
+    BrandedCodecovOption,
+    BrandedOption,
+    CodecovOption,
+    FallbackFieldEnum,
+)
 from codecov_cli.helpers.git import GitService
 
 _global_options = [
@@ -31,16 +36,17 @@ _global_options = [
         "-t",
         "--token",
         help="Codecov upload token",
-        envvar="CODECOV_TOKEN",
+        cls=BrandedOption,
+        envvar="TOKEN",
     ),
     click.option(
         "-r",
         "--slug",
         "slug",
-        cls=CodecovOption,
+        cls=BrandedCodecovOption,
         fallback_field=FallbackFieldEnum.slug,
         help="owner/repo slug used instead of the private repo token in Self-hosted",
-        envvar="CODECOV_SLUG",
+        envvar="SLUG",
     ),
 ]
 

@@ -4,9 +4,8 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 license-files = ["LICENSE"]
-authors = [
-    { name = "joseph-sentry", email = "joseph.sawaya@sentry.io" }
-]
+authors = [{ name = "Sentry", email = "oss@sentry.io" }]
+
 requires-python = ">=3.9"
 dependencies = [
     "codecov-cli>=10.4.0",
@@ -20,8 +19,8 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+package-dir = { "" = "src" }
 packages = ["prevent_cli"]
 
 [tool.uv.sources]
-codecov-cli = {path = "../codecov-cli"}
+codecov-cli = { path = "../codecov-cli", editable = true }

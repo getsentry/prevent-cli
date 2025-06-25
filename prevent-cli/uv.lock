@@ -100,7 +100,7 @@ wheels = [
 [[package]]
 name = "codecov-cli"
 version = "11.0.3"
-source = { directory = "../codecov-cli" }
+source = { editable = "../codecov-cli" }
 dependencies = [
     { name = "click" },
     { name = "ijson" },
@@ -219,7 +219,7 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "codecov-cli", directory = "../codecov-cli" }]
+requires-dist = [{ name = "codecov-cli", editable = "../codecov-cli" }]
 
 [[package]]
 name = "pyyaml"
