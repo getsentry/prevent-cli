@@ -8,6 +8,9 @@ targets:
   # For direct binary downloads + shasum + shasum.sig
   - name: github
     tagPrefix: v
+    tagOnly: true # remove when ready to go live
+    checksums:
+      - algorithm: sha256
 
   # - name: pypi
   # - name: sentry-pypi
