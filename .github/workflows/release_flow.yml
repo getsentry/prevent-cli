@@ -1,9 +1,10 @@
 name: Build and Publish CLI Release
 
 on:
-  release:
-    types:
-      - created
+  workflow_dispatch #temp disable
+  # release:
+  #   types:
+  #     - created
 
 permissions:
   contents: read
