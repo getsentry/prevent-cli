@@ -5,9 +5,13 @@ curl --proto '=https' --tlsv1.2 -LsSf https://github.com/astral-sh/uv/releases/d
 if sha256sum -c ./codecov-cli/scripts/uv-installer-0.7.8.sha256sum; then
     sh uv-installer.sh
 fi
-cd codecov-cli
+cd prevent-cli
 /root/.local/bin/uv python pin 3.9 # we need to build with python 3.9 to support systems with libpython >= 3.9
 /root/.local/bin/uv sync
 /root/.local/bin/uv add --dev pyinstaller
+/root/.local/bin/uv run pyinstaller -F src/prevent_cli/main.py
+mv ./dist/main ./dist/sentry-prevent-cli_$1
+
+cd ../codecov-cli
 /root/.local/bin/uv run pyinstaller -F codecov_cli/main.py
 mv ./dist/main ./dist/codecovcli_$1
