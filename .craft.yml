@@ -1,0 +1,14 @@
+github:
+  owner: getsentry
+  repo: prevent-cli
+
+changelogPolicy: auto
+
+targets:
+  # For direct binary downloads + shasum + shasum.sig
+  - name: github
+    tagPrefix: v
+
+  # - name: pypi
+  # - name: sentry-pypi
+  #   internalPypiRepo: getsentry/pypi
