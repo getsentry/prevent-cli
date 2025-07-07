@@ -1,11 +1,10 @@
-name: release (wip)
+name: Create release
 
 permissions:
   contents: read
   pull-requests: write
 
 on:
-  push:
   workflow_dispatch:
     inputs:
       version:
@@ -42,8 +41,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
         with:
-          version: 11.0.4
-          #version: ${{ github.event.inputs.version }}
-          #force: ${{ github.event.inputs.force }}
-          #merge_target: ${{ github.event.inputs.merge_target }}
-          merge_target: spalmurray/craft
+          version: ${{ github.event.inputs.version }}
+          force: ${{ github.event.inputs.force }}
+          merge_target: ${{ github.event.inputs.merge_target }}
