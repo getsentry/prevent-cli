@@ -99,7 +99,7 @@ wheels = [
 
 [[package]]
 name = "codecov-cli"
-version = "11.0.3"
+version = "11.0.4"
 source = { editable = "../codecov-cli" }
 dependencies = [
     { name = "click" },
