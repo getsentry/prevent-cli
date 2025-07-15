@@ -4,9 +4,8 @@
 
 The Sentry Prevent CLI is responsible for uploading code coverage and test results to Sentry. It can be used directly or indirectly through our [Sentry Prevent GitHub Action](https://github.com/getsentry/prevent-action).
 
-## What happened to the Codecov CLI?
-
-The Codecov CLI is still around! We have moved the Codecov CLI's codebase into the `codecov-cli` sub-project in this repository because the Sentry Prevent CLI uses it as a backend and we wanted to keep the projects together in the `getsentry` organization. The Codecov CLI is still being maintained, improved, and published - just from this repository. See the sub-project's [README](/codecov-cli/README.md) for Codecov CLI specific information, the rest of this document will be about the Prevent CLI.
+> [!NOTE]  
+> The Codecov CLI is still around! We have moved the Codecov CLI's codebase into the `codecov-cli` sub-project in this repository because the Sentry Prevent CLI uses it as a backend and we wanted to keep the projects together in the `getsentry` organization. The Codecov CLI is still being maintained, improved, and published - just from this repository. See the sub-project's [README](/codecov-cli/README.md) for Codecov CLI specific information, the rest of this document will be about the Prevent CLI.
 
 - [Installing](#installing)
 - [Usage](#usage)
@@ -21,7 +20,7 @@ If you're determined, you can build the CLI yourself from source by running `uv 
 
 # Usage
 
-If the installation is successful, running `sentry-prevent-cli --help` will output the available commands along with the different options that can be used with them.
+Todo
 
 # Contributions
 
