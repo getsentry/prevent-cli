@@ -9,7 +9,7 @@ class ReportType(Enum):
 def report_type_from_str(report_type_str: str) -> ReportType:
     if report_type_str == "coverage":
         return ReportType.COVERAGE
-    elif report_type_str == "test_results":
+    elif report_type_str.replace("-", "_") == "test_results":
         return ReportType.TEST_RESULTS
     else:
         raise ValueError(f"Invalid upload type: {report_type_str}")
