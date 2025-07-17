@@ -107,8 +107,7 @@ jobs:
           pip install uv
           cd prevent-cli # codecov-cli is a dependency of prevent-cli
           # Need to build pyyaml and ijson from sdists to get universal2 macos build to work
-          uv sync --no-binary-package pyyaml --no-binary-package ijson 
-          uv add --dev pyinstaller
+          uv sync --no-binary-package pyyaml --no-binary-package ijson
 
       - name: Build with pyinstaller for ${{matrix.TARGET}}
         run: cd codecov-cli && ${{matrix.CMD_BUILD}}

@@ -6,7 +6,6 @@ cd prevent-cli
 python3.9 -m pip install uv --only-binary uv
 uv python pin 3.9 # we need to build with python 3.9 to support systems with libpython >= 3.9
 uv sync
-uv add --dev pyinstaller
 uv run pyinstaller -F src/prevent_cli/main.py
 mv ./dist/main ./dist/sentry-prevent-cli_$1
 cd ../codecov-cli
