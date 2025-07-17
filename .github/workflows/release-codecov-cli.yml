@@ -77,9 +77,11 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-              uv run pyinstaller --target-arch universal2 -F ./codecov-cli/codecov_cli/main.py &&
+              cd codecov-cli
+              uv run pyinstaller --target-arch universal2 -F ./codecov_cli/main.py &&
               mv ./dist/main ./dist/codecovcli_macos && 
-              uv run pyinstaller --target-arch universal2 -F ./prevent-cli/src/prevent_cli/main.py &&
+              cd ../prevent-cli
+              uv run pyinstaller --target-arch universal2 -F ./src/prevent_cli/main.py &&
               mv ./dist/main ./dist/sentry-prevent-cli_macos
             OUT_FILE_SUFFIX: _macos
             ASSET_MIME: application/octet-stream
@@ -87,9 +89,11 @@ jobs:
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: >
-              uv run pyinstaller -F .\codecov-cli\codecov_cli\main.py &&
+              Set-Location .\codecov-cli
+              uv run pyinstaller -F .\codecov_cli\main.py &&
               Move-Item -Path ".\dist\main.exe" -Destination ".\dist\codecovcli_windows.exe" &&
-              uv run pyinstaller -F .\prevent-cli\src\prevent_cli\main.py &&
+              Set-Location ..\prevent-cli
+              uv run pyinstaller -F .\src\prevent_cli\main.py &&
               Move-Item -Path ".\dist\main.exe" -Destination ".\dist\sentry-prevent-cli_windows.exe"
             OUT_FILE_SUFFIX: _windows.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
@@ -105,7 +109,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install uv
-          cd prevent-cli # codecov-cli is a dependency of prevent-cli
+          cd prevent-cli
           # Need to build pyyaml and ijson from sdists to get universal2 macos build to work
           uv sync --no-binary-package pyyaml --no-binary-package ijson
           cd ../codecov-cli
