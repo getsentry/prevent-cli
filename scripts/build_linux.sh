@@ -1,4 +1,5 @@
 #!/bin/sh
+set -eux
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y tzdata
 apt install -y python3.9 python3.9-dev python3-pip
