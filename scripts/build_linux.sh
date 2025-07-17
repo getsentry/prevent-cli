@@ -17,5 +17,5 @@ mv ./dist/main ./dist/codecovcli_$1
 if [ $1 = "linux_x86_64" ]; then
     cd ..
     mv ./prevent-cli/dist/sentry-prevent-cli_$1 ./prevent-cli/dist/sentry-prevent-cli_linux
-    mv ./codecov-cli/dist/codecovcli_$1 ./dist/codecovcli_linux
+    mv ./codecov-cli/dist/codecovcli_$1 ./codecov-cli/dist/codecovcli_linux
 fi
