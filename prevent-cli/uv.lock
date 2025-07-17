@@ -123,6 +123,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "pre-commit", specifier = "==3.*" },
+    { name = "pyinstaller", specifier = ">=6.14.2" },
     { name = "pytest", specifier = "==7.*" },
     { name = "pytest-asyncio", specifier = "==0.21.1" },
     { name = "pytest-cov", specifier = "==4.*" },

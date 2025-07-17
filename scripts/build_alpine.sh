@@ -8,7 +8,6 @@ fi
 cd prevent-cli
 /root/.local/bin/uv python pin 3.9 # we need to build with python 3.9 to support systems with libpython >= 3.9
 /root/.local/bin/uv sync
-/root/.local/bin/uv add --dev pyinstaller
 /root/.local/bin/uv run pyinstaller -F src/prevent_cli/main.py
 mv ./dist/main ./dist/sentry-prevent-cli_$1
 
