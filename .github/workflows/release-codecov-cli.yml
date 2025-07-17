@@ -37,13 +37,13 @@ jobs:
       - name: Upload codecov-cli artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: codecov-cli-wheel
+          name: codecov-cli_wheel
           path: ./codecov-cli/dist/*
 
       - name: Upload prevent-cli artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: sentry-prevent-cli-wheel
+          name: sentry-prevent-cli_wheel
           path: ./prevent-cli/dist/*
 
   # publish_to_pypi:
@@ -74,7 +74,7 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - os: macos-latest
+          - os: macos-13
             TARGET: macos
             CMD_BUILD: >
               cd ./codecov-cli &&
@@ -86,7 +86,7 @@ jobs:
             OUT_FILE_SUFFIX: _macos
             ASSET_MIME: application/octet-stream
 
-          - os: windows-latest
+          - os: windows-2022
             TARGET: windows
             CMD_BUILD: >
               Set-Location .\codecov-cli &&
