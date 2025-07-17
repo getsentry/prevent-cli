@@ -77,7 +77,8 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-              cd codecov-cli
+              pwd
+              cd ./codecov-cli
               uv run pyinstaller --target-arch universal2 -F ./codecov_cli/main.py &&
               mv ./dist/main ./dist/codecovcli_macos && 
               cd ../prevent-cli
