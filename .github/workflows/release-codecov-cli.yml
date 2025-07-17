@@ -37,13 +37,13 @@ jobs:
       - name: Upload codecov-cli artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: codecov-cli-pypi
+          name: codecov-cli-wheel
           path: ./codecov-cli/dist/*
 
       - name: Upload prevent-cli artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: prevent-cli-pypi
+          name: sentry-prevent-cli-wheel
           path: ./prevent-cli/dist/*
 
   # publish_to_pypi:
@@ -77,19 +77,19 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-              uv run pyinstaller --target-arch universal2 -F codecov_cli/main.py &&
-              mv dist/main dist/codecovcli_macos && 
-              uv run pyinstaller --target-arch universal2 -F prevent_cli/main.py &&
-              mv dist/main dist/sentry-prevent-cli_macos
+              uv run pyinstaller --target-arch universal2 -F ./codecov-cli/codecov_cli/main.py &&
+              mv ./dist/main ./dist/codecovcli_macos && 
+              uv run pyinstaller --target-arch universal2 -F ./prevent-cli/src/prevent_cli/main.py &&
+              mv ./dist/main ./dist/sentry-prevent-cli_macos
             OUT_FILE_SUFFIX: _macos
             ASSET_MIME: application/octet-stream
 
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: >
-              uv run pyinstaller -F codecov_cli\main.py &&
+              uv run pyinstaller -F .\codecov-cli\codecov_cli\main.py &&
               Move-Item -Path ".\dist\main.exe" -Destination ".\dist\codecovcli_windows.exe" &&
-              uv run pyinstaller -F prevent-cli\main.py &&
+              uv run pyinstaller -F .\prevent-cli\src\prevent_cli\main.py &&
               Move-Item -Path ".\dist\main.exe" -Destination ".\dist\sentry-prevent-cli_windows.exe"
             OUT_FILE_SUFFIX: _windows.exe
             ASSET_MIME: application/vnd.microsoft.portable-executable
@@ -112,7 +112,7 @@ jobs:
           uv sync --no-binary-package pyyaml --no-binary-package ijson
 
       - name: Build with pyinstaller for ${{matrix.TARGET}}
-        run: cd codecov-cli && ${{matrix.CMD_BUILD}}
+        run: ${{matrix.CMD_BUILD}}
 
       - name: Upload codecovcli binary for ${{matrix.TARGET}}
         uses: actions/upload-artifact@v4
