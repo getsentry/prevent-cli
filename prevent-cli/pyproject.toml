@@ -24,3 +24,8 @@ packages = ["prevent_cli"]
 
 [tool.uv.sources]
 codecov-cli = { path = "../codecov-cli", editable = true }
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.14.2",
+]
