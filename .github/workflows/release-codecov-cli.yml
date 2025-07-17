@@ -77,11 +77,10 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-              pwd
-              cd ./codecov-cli
+              cd ./codecov-cli &&
               uv run pyinstaller --target-arch universal2 -F ./codecov_cli/main.py &&
               mv ./dist/main ./dist/codecovcli_macos && 
-              cd ../prevent-cli
+              cd ../prevent-cli &&
               uv run pyinstaller --target-arch universal2 -F ./src/prevent_cli/main.py &&
               mv ./dist/main ./dist/sentry-prevent-cli_macos
             OUT_FILE_SUFFIX: _macos
@@ -90,10 +89,10 @@ jobs:
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: >
-              Set-Location .\codecov-cli
+              Set-Location .\codecov-cli &&
               uv run pyinstaller -F .\codecov_cli\main.py &&
               Move-Item -Path ".\dist\main.exe" -Destination ".\dist\codecovcli_windows.exe" &&
-              Set-Location ..\prevent-cli
+              Set-Location ..\prevent-cli &&
               uv run pyinstaller -F .\src\prevent_cli\main.py &&
               Move-Item -Path ".\dist\main.exe" -Destination ".\dist\sentry-prevent-cli_windows.exe"
             OUT_FILE_SUFFIX: _windows.exe
