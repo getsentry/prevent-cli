@@ -88,7 +88,9 @@ def cli(
 
 upload = deepcopy(upload_coverage)
 upload.name = "upload"
-upload.context_settings = {"token_normalize_func": lambda x: x.replace("_", "-")}
+upload.context_settings = {
+    "token_normalize_func": lambda x: x.replace("test_results", "test-results")
+}
 for i, param in enumerate(upload.params):
     if param.name == "report_type_str":
         upload.params[i] = click.Option(
