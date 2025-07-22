@@ -1,6 +1,7 @@
 import logging
 import pathlib
 import typing
+from copy import deepcopy
 
 import click
 from codecov_cli import __version__
@@ -85,12 +86,27 @@ def cli(
     init_telem(ctx.obj)
 
 
+upload = deepcopy(upload_coverage)
+upload.name = "upload"
+
+for i, param in enumerate(upload.params):
+    if param.name == "report_type_str":
+        upload.params[i] = click.Option(
+            ("--report-type", "report_type_str"),
+            help="The type of report to upload",
+            default="coverage",
+            type=click.Choice(["coverage", "test-results", "test_results"]),
+        )
+        break
+
+
 cli.add_command(do_upload)
 cli.add_command(create_commit)
 cli.add_command(create_report)
 cli.add_command(pr_base_picking)
 cli.add_command(empty_upload)
 cli.add_command(upload_coverage)
+cli.add_command(upload)
 cli.add_command(upload_process)
 cli.add_command(send_notifications)
 cli.add_command(process_test_results)
