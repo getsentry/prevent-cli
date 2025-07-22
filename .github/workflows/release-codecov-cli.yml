@@ -1,51 +1,16 @@
-# This workflow builds and publishes codecov-cli on release creation.
-# sentry-prevent-cli is built and published separately (managed by craft)
+# This workflow publishes the codecov-cli assets to PyPI, GitHub releases, and
+# our GCS bucket when a release is created.
 name: Build and publish codecov-cli
 
 on:
-  push: #temp
-  # release:
-  #   types:
-  #     - created
+  release:
+    types:
+      - created
 
 permissions:
   contents: read
 
 jobs:
-  build_for_pypi:
-    permissions:
-      contents: read
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
-      - name: Install dependencies
-        run: pip install uv
-
-      - name: Build codecov-cli sdist and bdist
-        run: |
-          cd codecov-cli
-          uv build
-
-      - name: Build prevent-cli sdist and bdist
-        run: |
-          cd prevent-cli
-          uv build
-
-      - name: Upload codecov-cli artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: codecov-cli_wheel
-          path: ./codecov-cli/dist/*
-
-      - name: Upload prevent-cli artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: sentry-prevent-cli_wheel
-          path: ./prevent-cli/dist/*
-
   # publish_to_pypi:
   #   needs: build_for_pypi
   #   permissions:
@@ -56,144 +21,45 @@ jobs:
   #     url: https://pypi.org/p/codecov-cli
   #   steps:
   #     - name: Download build artifacts
-  #       uses: actions/download-artifact@v4
+  #       uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5 # v11
   #       with:
-  #         name: pypi
+  #         branch: release/${{ github.ref }}
+  #         name: codecov-cli_wheel
   #         path: codecov-cli/dist
   #
   #     - name: Publish package to PyPi
-  #       uses: pypa/gh-action-pypi-publish@release/v1
+  #       uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
   #       with:
   #         verbose: true
   #         packages-dir: codecov-cli/dist
 
-  build_assets:
-    name: Build ${{ matrix.os }} binaries
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          - os: macos-13
-            TARGET: macos
-            CMD_BUILD: >
-              cd ./codecov-cli &&
-              uv run pyinstaller --target-arch universal2 -F ./codecov_cli/main.py &&
-              mv ./dist/main ./dist/codecovcli_macos && 
-              cd ../prevent-cli &&
-              uv run pyinstaller --target-arch universal2 -F ./src/prevent_cli/main.py &&
-              mv ./dist/main ./dist/sentry-prevent-cli_macos
-            OUT_FILE_SUFFIX: _macos
-            ASSET_MIME: application/octet-stream
-
-          - os: windows-2022
-            TARGET: windows
-            CMD_BUILD: >
-              Set-Location .\codecov-cli &&
-              uv run pyinstaller -F .\codecov_cli\main.py &&
-              Move-Item -Path ".\dist\main.exe" -Destination ".\dist\codecovcli_windows.exe" &&
-              Set-Location ..\prevent-cli &&
-              uv run pyinstaller -F .\src\prevent_cli\main.py &&
-              Move-Item -Path ".\dist\main.exe" -Destination ".\dist\sentry-prevent-cli_windows.exe"
-            OUT_FILE_SUFFIX: _windows.exe
-            ASSET_MIME: application/vnd.microsoft.portable-executable
-
+  publish_to_github:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v3
+      - name: Download build artifacts
+        uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5 # v11
         with:
-          python-version: "3.9"
+          branch: release/${{ github.ref }}
+          name: codecov.*
+          name_is_regexp: true
+          path: codecov-cli/dist
 
-      - name: Install dependencies
-        run: |
-          pip install uv
-          cd prevent-cli
-          # Need to build pyyaml and ijson from sdists to get universal2 macos build to work
-          uv sync --no-binary-package pyyaml --no-binary-package ijson
-          cd ../codecov-cli
-          uv sync --no-binary-package pyyaml --no-binary-package ijson
-
-      - name: Build with pyinstaller for ${{matrix.TARGET}}
-        run: ${{matrix.CMD_BUILD}}
-
-      - name: Upload codecovcli binary for ${{matrix.TARGET}}
-        uses: actions/upload-artifact@v4
+      - name: Get auth token
+        id: token
+        uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
         with:
-          name: codecovcli${{matrix.OUT_FILE_SUFFIX}}
-          path: ./codecov-cli/dist/codecovcli${{matrix.OUT_FILE_SUFFIX}}
+          app-id: ${{ vars.SENTRY_RELEASE_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.SENTRY_RELEASE_BOT_PRIVATE_KEY }}
 
-      - name: Upload sentry-prevent-cli binary for ${{matrix.TARGET}}
-        uses: actions/upload-artifact@v4
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: svenstaro/upload-release-action@81c65b7cd4de9b2570615ce3aad67a41de5b1a13 # v2.11.2
         with:
-          name: sentry-prevent-cli${{matrix.OUT_FILE_SUFFIX}}
-          path: ./prevent-cli/dist/sentry-prevent-cli${{matrix.OUT_FILE_SUFFIX}}
-
-  build_linux_assets:
-    name: Build ${{ matrix.distro_name }}_${{ matrix.arch }} binary
-    runs-on: ${{ matrix.runs-on }}
-    strategy:
-      matrix:
-        include:
-          - distro: "alpine:3.14" # alpine 3.14 needed for musl 1.2.2/python 3.9 compatibility
-            arch: arm64
-            distro_name: alpine
-            runs-on: ubuntu-24.04-arm
-          - distro: "alpine:3.14"
-            arch: x86_64
-            distro_name: alpine
-            runs-on: ubuntu-24.04
-          - distro: "ubuntu:20.04" # ubuntu 20.04 needed for glibc 2.31/python 3.9 compatibility
-            arch: arm64
-            distro_name: linux
-            runs-on: ubuntu-24.04-arm
-          - distro: "ubuntu:20.04"
-            distro_name: linux
-            arch: x86_64
-            runs-on: ubuntu-24.04
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Run in Docker
-        run: |
-          docker run \
-            --rm \
-            -v $(pwd):/${{ github.workspace }} \
-            -w ${{ github.workspace }} \
-            --platform linux/${{ matrix.arch }} \
-            ${{ matrix.distro }} \
-            ./scripts/build_${{ matrix.distro_name }}.sh ${{ matrix.distro_name }}_${{ matrix.arch }}
-
-      - name: Upload codecovcli binary for ${{matrix.distro_name}}_${{ matrix.arch}}
-        uses: actions/upload-artifact@v4
-        with:
-          name: codecovcli_${{ matrix.distro_name }}_${{ matrix.arch }}
-          path: ./codecov-cli/dist/codecovcli_*
-
-      - name: Upload sentry-prevent-cli binary for ${{matrix.distro_name}}_${{ matrix.arch}}
-        uses: actions/upload-artifact@v4
-        with:
-          name: sentry-prevent-cli_${{ matrix.distro_name }}_${{ matrix.arch }}
-          path: ./prevent-cli/dist/sentry-prevent-cli_*
-
-      # - name: Get auth token
-      #   id: token
-      #   uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
-      #   with:
-      #     app-id: ${{ vars.SENTRY_RELEASE_BOT_CLIENT_ID }}
-      #     private-key: ${{ secrets.SENTRY_RELEASE_BOT_PRIVATE_KEY }}
-      #
-      # - name: Upload Release Asset
-      #   id: upload-release-asset
-      #   uses: svenstaro/upload-release-action@v2
-      #   with:
-      #     repo_token: ${{ steps.token.outputs.token }}
-      #     file_glob: true
-      #     file: ./codecov-cli/dist/codecovcli_*
-      #     tag: ${{ github.ref }}
-      #     overwrite: true
+          repo_token: ${{ steps.token.outputs.token }}
+          file_glob: true
+          file: ./codecov-cli/dist/*
+          tag: ${{ github.ref }}
+          overwrite: true
 
   # publish_release:
   #   name: Publish release
