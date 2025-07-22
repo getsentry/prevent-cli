@@ -243,7 +243,7 @@ Options:
                                   Use the legacy upload endpoint
   --handle-no-reports-found       Raise no exceptions when no coverage reports
                                   found.
-  --report-type [coverage|test-results]
+  --report-type [coverage|test-results|test_results]
                                   The type of report to upload
   --network-filter TEXT           Specify a filter on the files listed in the
                                   network section of the Codecov report. This
