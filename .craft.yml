@@ -4,15 +4,6 @@ github:
 
 changelogPolicy: auto
 
-requireNames:
-  - sentry-prevent-cli_wheel
-  - sentry-prevent-cli_alpine_arm64
-  - sentry-prevent-cli_alpine_x86_64
-  - sentry-prevent-cli_linux_arm64
-  - sentry-prevent-cli_linux_x86_64
-  - sentry-prevent-cli_macos
-  - sentry-prevent-cli_windows.exe
-
 targets:
   # For direct binary downloads + shasum + shasum.sig
   - name: github
