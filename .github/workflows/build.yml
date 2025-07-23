@@ -5,8 +5,8 @@ name: Build and publish codecov-cli
 
 on:
   push:
-    # branches:
-    #   - "release/**"
+    branches:
+      - "release/**"
 
 permissions:
   contents: read
