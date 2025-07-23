@@ -1,15 +1,23 @@
 [project]
-name = "prevent-cli"
-version = "0.1.0"
-description = "Add your description here"
+name = "sentry-prevent-cli"
+version = "0.1.4"
+description = "Sentry Prevent Command Line Interface"
 readme = "README.md"
 license-files = ["LICENSE"]
 authors = [{ name = "Sentry", email = "oss@sentry.io" }]
 
 requires-python = ">=3.9"
 dependencies = [
-    "codecov-cli>=10.4.0",
+    "codecov-cli==11.0.3",
 ]
+
+[dependency-groups]
+dev = [
+    "pyinstaller==6.*",
+]
+
+[tool.uv.sources]
+codecov-cli = { path = "../codecov-cli", editable = true }
 
 [project.scripts]
 sentry-prevent-cli = "prevent_cli.main:run"
@@ -21,6 +29,3 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 package-dir = { "" = "src" }
 packages = ["prevent_cli"]
-
-[tool.uv.sources]
-codecov-cli = { path = "../codecov-cli", editable = true }
