@@ -1,7 +1,7 @@
 # This workflow builds both sentry-prevent-cli and codecov-cli on push to a
 # release/* branch. These are later released by Craft and another workflow,
 # respectively.
-name: Build and publish codecov-cli
+name: Build release
 
 on:
   push:
@@ -156,3 +156,20 @@ jobs:
         with:
           name: sentry-prevent-cli_${{ matrix.distro_name }}_${{ matrix.arch }}
           path: ./prevent-cli/dist/sentry-prevent-cli_*
+
+  package_artifacts:
+    # Craft requires one artifact named after the long commit sha of the release
+    name: Package assets for Craft
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: sentry-prevent-cli_*
+          merge-multiple: true
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ github.sha }}
+          path: sentry-prevent-cli_*
