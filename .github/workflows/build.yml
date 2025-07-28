@@ -161,6 +161,7 @@ jobs:
     # Craft requires one artifact named after the long commit sha of the release
     name: Package assets for Craft
     runs-on: ubuntu-latest
+    needs: [build_for_pypi, build_assets, build_linux_assets]
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
