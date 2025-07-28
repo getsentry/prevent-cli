@@ -1,3 +1,9 @@
+## 11.0.5
+
+### Various fixes & improvements
+
+- Fix release trigger for codecov-cli publish (b896a153) by @spalmurray
+
 ## 11.0.4
 
 ### Various fixes & improvements
