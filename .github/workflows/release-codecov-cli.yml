@@ -4,8 +4,7 @@ name: Build and publish codecov-cli
 
 on:
   release:
-    types:
-      - created
+    types: [published]
 
 permissions:
   contents: read
