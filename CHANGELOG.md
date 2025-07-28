@@ -1,3 +1,34 @@
+## 11.0.4
+
+### Various fixes & improvements
+
+- fix: Add dependencies to package step (#81) by @spalmurray
+- fix: Bundle assets into one artifact named sha for craft publish (#80) by @spalmurray
+- fix: Craft try removing requireNames (#79) by @spalmurray
+- fix: macos build (#78) by @spalmurray
+- feat: Build out Craft release flow (#50) by @spalmurray
+- feat: create new upload command (#77) by @joseph-sentry
+- Remove workflows.old (#49) by @spalmurray
+- docs: Update readme to be slightly more informative (#76) by @spalmurray
+- Add craft yaml (#51) by @spalmurray
+- fix: configurable rebranding (#7) by @joseph-sentry
+- fix: handle merge_group github events (#6) by @joseph-sentry
+- ci(release): Fix command to get previous release version (#48) by @ElioDiNino
+- Release 11.0.3 (#46) by @sentry-release-bot
+- fix: build with python 3.9 (#45) by @spalmurray
+- Release 11.0.2 (#44) by @sentry-release-bot
+- fix: release asset filename wrong (#43) by @spalmurray
+- Release 11.0.2 (#42) by @sentry-release-bot
+- fix: linux x86_64 build requiring glibc >= 2.35 (#41) by @spalmurray
+- Release 11.0.1 (#40) by @sentry-release-bot
+- fix: try testing version name (#37) by @thomasrockhu-codecov
+- fix: set version name as env var (#35) by @thomasrockhu-codecov
+- fix: Downgrade pyinstaller build to python 3.11 (#34) by @spalmurray
+- Release 11.0.0 (#33) by @sentry-release-bot
+- fix: pypi publish wrong path (#32) by @spalmurray
+
+_Plus 34 more_
+
 ## 11.0.3
 
 ### What's Changed
