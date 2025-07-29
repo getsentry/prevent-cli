@@ -10,6 +10,6 @@ targets:
     tagPrefix: v
     checksums:
       - algorithm: sha256
-    includeNames: /^sentry-prevent-cli_.*/i
+    includeNames: /^(sentry-prevent-|sentry_prevent_|codecov-|codecov_)cli.*/i
 
   # - name: pypi
