@@ -178,5 +178,5 @@ jobs:
           path: |
             sentry-prevent-cli*
             sentry_prevent_cli*
-            codecov_cli*
+            codecov_cli-*
             codecovcli*
