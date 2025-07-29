@@ -35,7 +35,7 @@ coverage_files_patterns = [
     "luacov.report.out",
     "naxsi.info",
     "nosetests.xml",
-    "report.xml",
+    "report*.xml",
     "test_cov.xml",
 ]
 

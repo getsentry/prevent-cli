@@ -61,6 +61,8 @@ class TestCoverageFileFinder(object):
             "abc.gcov",
             "sub/abc.gcov",
             "sub/subsub/abc.gcov",
+            "report.xml",
+            "sub/reportDebug.xml",
         ]
 
         should_ignore = [
