@@ -177,6 +177,6 @@ jobs:
           name: ${{ github.sha }}
           path: |
             sentry-prevent-cli*
-            sentry_prevent_cli*
-            codecov_cli-*
+            sentry-prevent-cli_wheel/*
             codecovcli*
+            codecov-cli_wheel/*
