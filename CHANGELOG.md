@@ -1,3 +1,9 @@
+## 11.1.0
+
+### Various fixes & improvements
+
+- deploy: Enable real publishes to pypi and gcs (#85) by @spalmurray
+
 ## 11.0.6
 
 ### Various fixes & improvements
