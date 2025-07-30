@@ -3,6 +3,7 @@ set -eux
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y tzdata
 apt install -y python3.9 python3.9-dev python3-pip
+./scripts/pre-build.sh
 cd prevent-cli
 python3.9 -m pip install uv --only-binary uv
 uv python pin 3.9 # we need to build with python 3.9 to support systems with libpython >= 3.9

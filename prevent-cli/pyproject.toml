@@ -8,7 +8,7 @@ authors = [{ name = "Sentry", email = "oss@sentry.io" }]
 
 requires-python = ">=3.9"
 dependencies = [
-    "codecov-cli==11.0.4",
+    "codecov-cli==11.0.3",
 ]
 
 [dependency-groups]

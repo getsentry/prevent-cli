@@ -94,6 +94,9 @@ jobs:
           cd ../codecov-cli
           uv sync --no-binary-package pyyaml --no-binary-package ijson
 
+      - name: Run pre-build script
+        run: ./scripts/pre-build.sh
+
       - name: Build with pyinstaller for ${{matrix.TARGET}}
         run: ${{matrix.CMD_BUILD}}
 
