@@ -3,38 +3,38 @@
 name: Build and publish codecov-cli
 
 on:
-  release:
-    types: [published]
+  push
+  # release:
+  #   types: [published]
 
 permissions:
   contents: read
 
 jobs:
-  test:
+  publish_to_pypi:
+    permissions:
+      id-token: write # This is required for OIDC
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/codecov-cli
     steps:
-      - run: echo "hi from build and publish codecov-cli"
+      - name: Download pypi release assets
+        uses: robinraju/release-downloader@daf26c55d821e836577a15f77d86ddc078948b05 # v1.12
+        with:
+          # tag: ${{ github.ref_name }}
+          tag: "v11.0.6"
+          fileName: codecov_cli-*
+          out-file-path: codecov-cli/dist
 
-  # publish_to_pypi:
-  #   permissions:
-  #     id-token: write # This is required for OIDC
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: pypi
-  #     url: https://pypi.org/p/codecov-cli
-  #   steps:
-  #     - name: Download build artifacts
-  #       uses: dawidd6/action-download-artifact@ac66b43f0e6a346234dd65d4d0c8fbb31cb316e5 # v11
-  #       with:
-  #         branch: release/${{ github.ref }}
-  #         name: codecov-cli_wheel
-  #         path: codecov-cli/dist
-  #
-  #     - name: Publish package to PyPi
-  #       uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
-  #       with:
-  #         verbose: true
-  #         packages-dir: codecov-cli/dist
+      - name: test
+        run: ls -R codecov-cli/dist
+
+      # - name: Publish package to PyPi
+      #   uses: pypa/gh-action-pypi-publish@76f52bc884231f62b9a034ebfe128415bbaabdfc # v1.12.4
+      #   with:
+      #     verbose: true
+      #     packages-dir: codecov-cli/dist
 
   # publish_release:
   #   name: Publish release
