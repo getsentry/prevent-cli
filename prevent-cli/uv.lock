@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.9"
 
 [[package]]
@@ -108,7 +108,7 @@ wheels = [
 
 [[package]]
 name = "codecov-cli"
-version = "11.0.6"
+version = "11.1.0"
 source = { editable = "../codecov-cli" }
 dependencies = [
     { name = "click" },
@@ -397,7 +397,7 @@ wheels = [
 
 [[package]]
 name = "sentry-prevent-cli"
-version = "11.0.6"
+version = "11.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "codecov-cli" },
