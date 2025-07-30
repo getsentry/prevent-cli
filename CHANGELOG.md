@@ -1,3 +1,9 @@
+## 11.0.6
+
+### Various fixes & improvements
+
+- feat: Add codecov-cli gh release publish to craft flow (#83) by @spalmurray
+
 ## 11.0.5
 
 ### Various fixes & improvements
