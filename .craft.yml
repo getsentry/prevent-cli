@@ -12,4 +12,5 @@ targets:
       - algorithm: sha256
     includeNames: /^(sentry-prevent-|sentry_prevent_|codecov|codecov_)cli.*/i
 
-  # - name: pypi
+  - name: pypi
+    includeNames: /sentry_prevent_cli-*/i
