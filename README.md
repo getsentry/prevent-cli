@@ -22,7 +22,7 @@ pip install sentry-prevent-cli
 
 ### Binary
 
-We build and publish binaries for Linux, MacOS, and Windows. See our GitHub Releases for the full list of OS/architecture combos we build for. We'll use our macos binary for demonstration purposes here:
+We build and publish binaries for Linux, MacOS, and Windows. See our GitHub Releases for the full list of OS/architecture combinations we build for. We'll use our macos binary for demonstration purposes here:
 ```
 curl -o sentry-prevent-cli -L "https://github.com/getsentry/prevent-cli/releases/latest/download/sentry-prevent-cli_macos"
 chmod +x sentry-prevent-cli
@@ -37,9 +37,12 @@ curl -O -L "https://github.com/getsentry/prevent-cli/releases/latest/download/se
 ```
 Then, use `cosign` to verify the binary:
 ```
-cosign verify-blob sentry-prevent-cli --bundle sentry-prevent-cli_macos.bundle --certificate-identity-regexp=^https://github.com/getsentry/prevent-cli --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+cosign verify-blob sentry-prevent-cli \ 
+    --bundle sentry-prevent-cli_macos.bundle \
+    --certificate-identity-regexp=^https://github.com/getsentry/prevent-cli \ 
+    --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 ```
-The OIDC identity here is associated with the specific workflow run that signs the binary. If this command says the binary is verified, you can trust you've recieved the same binary we built in our GitHub Actions workflow.
+The OIDC identity here is associated with the specific workflow run that signs the binary. If the verification succeeds, you can trust you've recieved the same binary we built in our GitHub Actions workflow.
 
 # Usage
 
