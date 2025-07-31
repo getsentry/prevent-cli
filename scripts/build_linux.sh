@@ -14,9 +14,8 @@ cd ../codecov-cli
 uv run pyinstaller -F codecov_cli/main.py
 mv ./dist/main ./dist/codecovcli_$1
 
-# linux binary should be just codecovcli_linux
+# codecov linux binary should be just codecovcli_linux
 if [ $1 = "linux_x86_64" ]; then
     cd ..
-    mv ./prevent-cli/dist/sentry-prevent-cli_$1 ./prevent-cli/dist/sentry-prevent-cli_linux
     mv ./codecov-cli/dist/codecovcli_$1 ./codecov-cli/dist/codecovcli_linux
 fi
