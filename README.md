@@ -37,9 +37,9 @@ curl -O -L "https://github.com/getsentry/prevent-cli/releases/latest/download/se
 ```
 Then, use `cosign` to verify the binary:
 ```
-cosign verify-blob sentry-prevent-cli \ 
+cosign verify-blob sentry-prevent-cli \
     --bundle sentry-prevent-cli_macos.bundle \
-    --certificate-identity-regexp=^https://github.com/getsentry/prevent-cli \ 
+    --certificate-identity-regexp=^https://github.com/getsentry/prevent-cli \
     --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 ```
 The OIDC identity here is associated with the specific workflow run that signs the binary. If the verification succeeds, you can trust you've recieved the same binary we built in our GitHub Actions workflow.
