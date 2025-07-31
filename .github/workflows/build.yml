@@ -177,12 +177,25 @@ jobs:
         uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159 # v3.9.2
 
       - name: Sign sentry-prevent-cli binaries
-        run: cosign sign-blob sentry-prevent-cli_macos/sentry-prevent-cli_macos --bundle sentry-prevent-cli_macos/sentry-prevent-cli_macos.bundle --yes
+        run: |
+          cosign sign-blob sentry-prevent-cli_macos/sentry-prevent-cli_macos --bundle sentry-prevent-cli_macos/sentry-prevent-cli_macos.bundle --yes
+          cosign sign-blob sentry-prevent-cli_windows.exe/sentry-prevent-cli_windows.exe --bundle sentry-prevent-cli_windows.exe/sentry-prevent-cli_windows.exe.bundle --yes
+          cosign sign-blob sentry-prevent-cli_alpine_arm64/sentry-prevent-cli_alpine_arm64 --bundle sentry-prevent-cli_alpine_arm64/sentry-prevent-cli_alpine_arm64.bundle --yes
+          cosign sign-blob sentry-prevent-cli_alpine_x86_64/sentry-prevent-cli_alpine_x86_64 --bundle sentry-prevent-cli_alpine_x86_64/sentry-prevent-cli_alpine_x86_64.bundle --yes
+          cosign sign-blob sentry-prevent-cli_linux_arm64/sentry-prevent-cli_linux_arm64 --bundle sentry-prevent-cli_linux_arm64/sentry-prevent-cli_linux_arm64.bundle --yes
+          cosign sign-blob sentry-prevent-cli_linux_x86_64/sentry-prevent-cli_linux_x86_64 --bundle sentry-prevent-cli_linux_x86_64/sentry-prevent-cli_linux_x86_64.bundle --yes
 
-      - run: ls
+      - run: ls -R
 
       - name: test verification
-        run: cosign verify-blob sentry-prevent-cli_macos/sentry-prevent-cli_macos --bundle sentry-prevent-cli_macos/sentry-prevent-cli_macos.bundle --certificate-identity=https://github.com/getsentry/prevent-cli/.github/workflows/build.yml@refs/heads/release/99.9.9 --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+        run: |
+          cosign verify-blob sentry-prevent-cli_macos/sentry-prevent-cli_macos --bundle sentry-prevent-cli_macos/sentry-prevent-cli_macos.bundle --certificate-identity=https://github.com/getsentry/prevent-cli/.github/workflows/build.yml@refs/heads/release/99.9.9 --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+          cosign verify-blob sentry-prevent-cli_macos/sentry-prevent-cli_macos --bundle sentry-prevent-cli_macos/sentry-prevent-cli_macos.bundle --yes --certificate-identity=https://github.com/getsentry/prevent-cli/.github/workflows/build.yml@refs/heads/release/99.9.9 --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+          cosign verify-blob sentry-prevent-cli_windows.exe/sentry-prevent-cli_windows.exe --bundle sentry-prevent-cli_windows.exe/sentry-prevent-cli_windows.exe.bundle --yes --certificate-identity=https://github.com/getsentry/prevent-cli/.github/workflows/build.yml@refs/heads/release/99.9.9 --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+          cosign verify-blob sentry-prevent-cli_alpine_arm64/sentry-prevent-cli_alpine_arm64 --bundle sentry-prevent-cli_alpine_arm64/sentry-prevent-cli_alpine_arm64.bundle --yes --certificate-identity=https://github.com/getsentry/prevent-cli/.github/workflows/build.yml@refs/heads/release/99.9.9 --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+          cosign verify-blob sentry-prevent-cli_alpine_x86_64/sentry-prevent-cli_alpine_x86_64 --bundle sentry-prevent-cli_alpine_x86_64/sentry-prevent-cli_alpine_x86_64.bundle --yes --certificate-identity=https://github.com/getsentry/prevent-cli/.github/workflows/build.yml@refs/heads/release/99.9.9 --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+          cosign verify-blob sentry-prevent-cli_linux_arm64/sentry-prevent-cli_linux_arm64 --bundle sentry-prevent-cli_linux_arm64/sentry-prevent-cli_linux_arm64.bundle --yes --certificate-identity=https://github.com/getsentry/prevent-cli/.github/workflows/build.yml@refs/heads/release/99.9.9 --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+          cosign verify-blob sentry-prevent-cli_linux_x86_64/sentry-prevent-cli_linux_x86_64 --bundle sentry-prevent-cli_linux_x86_64/sentry-prevent-cli_linux_x86_64.bundle --yes --certificate-identity=https://github.com/getsentry/prevent-cli/.github/workflows/build.yml@refs/heads/release/99.9.9 --certificate-oidc-issuer=https://token.actions.githubusercontent.com
 
       - name: Upload release artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
