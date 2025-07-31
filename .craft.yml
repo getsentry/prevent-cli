@@ -5,7 +5,7 @@ github:
 changelogPolicy: auto
 
 targets:
-  # For direct binary downloads + shasum + shasum.sig
+  # For direct binary downloads + cosign bundles
   - name: github
     tagPrefix: v
     checksums:
