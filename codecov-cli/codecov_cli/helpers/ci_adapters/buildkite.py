@@ -22,10 +22,40 @@ class BuildkiteAdapter(CIAdapterBase):
         return os.getenv("BUILDKITE_COMMIT")
 
     def _get_slug(self):
+        # https://buildkite.com/docs/pipelines/configure/environment-variables#BUILDKITE_REPO
+        repo_url = os.getenv("BUILDKITE_REPO")
+        if repo_url:
+            slug = self._parse_slug_from_repo(repo_url)
+            if slug:
+                return slug
+
+        # Fallback to organization and pipeline slugs
         org = os.getenv("BUILDKITE_ORGANIZATION_SLUG")
         repo = os.getenv("BUILDKITE_PIPELINE_SLUG")
         if org and repo:
             return f"{org}/{repo}"
+        return None
+
+    def _parse_slug_from_repo(self, repo_url: str):
+        """
+        TODO: this is relevant: https://stackoverflow.com/questions/31801271/what-are-the-supported-git-url-formats
+        supports:
+            (protocol://)host.xz/path/to/repo(.git/)
+            (protocol://)host.xz:path/to/repo(.git/)
+            (protocol://)user@host.xz:path/to/repo(.git/)
+            (protocol://)user@host.xz/path/to/repo(.git/)
+        """
+        if not repo_url:
+            return None
+
+        value = repo_url.strip()
+        value = value.removesuffix("/")
+        value = value.removesuffix(".git")
+
+        value = value.replace(":", "/")
+        parts = [p for p in value.split("/") if p]
+        if len(parts) >= 2:
+            return "/".join(parts[-2:])
         return None
 
     def _get_service(self):

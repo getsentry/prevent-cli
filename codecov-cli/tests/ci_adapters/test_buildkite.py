@@ -12,6 +12,7 @@ class BuildkiteEnvEnum(str, Enum):
     BUILDKITE_BUILD_NUMBER = "BUILDKITE_BUILD_NUMBER"
     BUILDKITE_BUILD_URL = "BUILDKITE_BUILD_URL"
     BUILDKITE_COMMIT = "BUILDKITE_COMMIT"
+    BUILDKITE_REPO = "BUILDKITE_REPO"
     BUILDKITE_ORGANIZATION_SLUG = "BUILDKITE_ORGANIZATION_SLUG"
     BUILDKITE_PIPELINE_SLUG = "BUILDKITE_PIPELINE_SLUG"
     BUILDKITE_PULL_REQUEST = "BUILDKITE_PULL_REQUEST"
@@ -107,6 +108,33 @@ class TestBuildkite(object):
             ({}, None),
             (
                 {
+                    BuildkiteEnvEnum.BUILDKITE_REPO: "git@github.com:codecov/umbrella.git"
+                },
+                "codecov/umbrella",
+            ),
+            (
+                {
+                    BuildkiteEnvEnum.BUILDKITE_REPO: "https://github.com/codecov/umbrella.git"
+                },
+                "codecov/umbrella",
+            ),
+            (
+                {
+                    BuildkiteEnvEnum.BUILDKITE_REPO: "ssh://git@github.com/codecov/umbrella.git"
+                },
+                "codecov/umbrella",
+            ),
+            (
+                {BuildkiteEnvEnum.BUILDKITE_REPO: "git://github.com/codecov/umbrella"},
+                "codecov/umbrella",
+            ),
+            (
+                # already-slug-like fallback
+                {BuildkiteEnvEnum.BUILDKITE_REPO: "codecov/umbrella"},
+                "codecov/umbrella",
+            ),
+            (
+                {
                     BuildkiteEnvEnum.BUILDKITE_ORGANIZATION_SLUG: "myorg",
                     BuildkiteEnvEnum.BUILDKITE_PIPELINE_SLUG: "myrepo",
                 },
@@ -118,6 +146,15 @@ class TestBuildkite(object):
                     BuildkiteEnvEnum.BUILDKITE_PIPELINE_SLUG: "myrepo",
                 },
                 "myorg/subteam/myrepo",
+            ),
+            (
+                # precedence: BUILDKITE_REPO should win over ORG/PIPELINE
+                {
+                    BuildkiteEnvEnum.BUILDKITE_REPO: "git@github.com:codecov/umbrella.git",
+                    BuildkiteEnvEnum.BUILDKITE_ORGANIZATION_SLUG: "myorg",
+                    BuildkiteEnvEnum.BUILDKITE_PIPELINE_SLUG: "myrepo",
+                },
+                "codecov/umbrella",
             ),
             (
                 {
