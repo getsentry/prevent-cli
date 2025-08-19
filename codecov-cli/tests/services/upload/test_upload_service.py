@@ -2,6 +2,7 @@ import click
 import pytest
 from click.testing import CliRunner
 
+from codecov_cli.commands.upload import DEFAULT_URL_PATHS
 from codecov_cli.helpers.upload_type import ReportType
 from codecov_cli.services.upload import (
     LegacyUploadSender,
@@ -48,6 +49,7 @@ def test_do_upload_logic_happy_path_legacy_uploader(mocker):
             cli_config,
             versioning_system,
             ci_adapter,
+            DEFAULT_URL_PATHS,
             report_type=ReportType.COVERAGE,
             commit_sha="commit_sha",
             report_code="report_code",
@@ -116,6 +118,7 @@ def test_do_upload_logic_happy_path_legacy_uploader(mocker):
         token="token",
         env_vars=None,
         report_code="report_code",
+        url_paths=DEFAULT_URL_PATHS,
         report_type=ReportType.COVERAGE,
         name="name",
         branch="branch",
@@ -165,6 +168,7 @@ def test_do_upload_logic_happy_path(mocker):
             cli_config,
             versioning_system,
             ci_adapter,
+            DEFAULT_URL_PATHS,
             report_type=ReportType.COVERAGE,
             commit_sha="commit_sha",
             report_code="report_code",
@@ -231,6 +235,7 @@ def test_do_upload_logic_happy_path(mocker):
         token="token",
         env_vars=None,
         report_code="report_code",
+        url_paths=DEFAULT_URL_PATHS,
         report_type=ReportType.COVERAGE,
         name="name",
         branch="branch",
@@ -276,6 +281,7 @@ def test_do_upload_logic_dry_run(mocker):
             cli_config,
             versioning_system,
             ci_adapter,
+            DEFAULT_URL_PATHS,
             report_type=ReportType.COVERAGE,
             commit_sha="commit_sha",
             report_code="report_code",
@@ -362,6 +368,7 @@ def test_do_upload_logic_verbose(mocker, use_verbose_option):
             cli_config,
             versioning_system,
             ci_adapter,
+            DEFAULT_URL_PATHS,
             branch="branch",
             build_code="build_code",
             build_url="build_url",
@@ -444,6 +451,7 @@ def test_do_upload_no_cov_reports_found(mocker):
             cli_config,
             versioning_system,
             ci_adapter,
+            DEFAULT_URL_PATHS,
             report_type=ReportType.COVERAGE,
             commit_sha="commit_sha",
             report_code="report_code",
@@ -550,6 +558,7 @@ def test_do_upload_rase_no_cov_reports_found_error(mocker):
             cli_config,
             versioning_system,
             ci_adapter,
+            DEFAULT_URL_PATHS,
             report_type=ReportType.COVERAGE,
             commit_sha="commit_sha",
             report_code="report_code",
@@ -640,6 +649,7 @@ def test_do_upload_logic_happy_path_test_results(mocker):
             cli_config,
             versioning_system,
             ci_adapter,
+            url_paths={ReportType.TEST_RESULTS: "upload/test_results/v1"},
             args={"args": "fake_args"},
             branch="branch",
             build_code="build_code",
@@ -694,6 +704,7 @@ def test_do_upload_logic_happy_path_test_results(mocker):
         commit_sha="commit_sha",
         token="token",
         env_vars=None,
+        url_paths={ReportType.TEST_RESULTS: "upload/test_results/v1"},
         report_code="report_code",
         report_type=ReportType.TEST_RESULTS,
         name="name",

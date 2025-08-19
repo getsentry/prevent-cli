@@ -14,12 +14,13 @@ from codecov_cli.commands.get_report_results import get_report_results
 from codecov_cli.commands.process_test_results import process_test_results
 from codecov_cli.commands.report import create_report
 from codecov_cli.commands.send_notifications import send_notifications
-from codecov_cli.commands.upload import do_upload
+from codecov_cli.commands.upload import DEFAULT_URL_PATHS, do_upload
 from codecov_cli.commands.upload_coverage import upload_coverage
 from codecov_cli.commands.upload_process import upload_process
 from codecov_cli.helpers.ci_adapters import get_ci_adapter, get_ci_providers_list
 from codecov_cli.helpers.config import load_cli_config
 from codecov_cli.helpers.logging_utils import configure_logger
+from codecov_cli.helpers.upload_type import ReportType
 from codecov_cli.helpers.versioning_systems import get_versioning_system
 from codecov_cli.opentelemetry import init_telem
 
@@ -83,6 +84,10 @@ def cli(
     ctx.obj["disable_telem"] = disable_telem
     ctx.obj["branding"] = branding
 
+    custom_url_paths = deepcopy(DEFAULT_URL_PATHS)
+    custom_url_paths[ReportType.TEST_RESULTS] = "/upload/test_analytics/v1"
+    ctx.obj["url_paths"] = custom_url_paths
+
     init_telem(ctx.obj)
 
 
@@ -100,18 +105,18 @@ for i, param in enumerate(upload.params):
         break
 
 
+cli.add_command(pr_base_picking)
+cli.add_command(empty_upload)
+cli.add_command(upload)
+cli.add_command(send_notifications)
+
+# deprecated commands:
 cli.add_command(do_upload)
 cli.add_command(create_commit)
 cli.add_command(create_report)
-cli.add_command(pr_base_picking)
-cli.add_command(empty_upload)
 cli.add_command(upload_coverage)
-cli.add_command(upload)
 cli.add_command(upload_process)
-cli.add_command(send_notifications)
 cli.add_command(process_test_results)
-
-# deprecated commands:
 cli.add_command(create_report_results)
 cli.add_command(get_report_results)
 

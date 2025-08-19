@@ -10,12 +10,12 @@ import sentry_sdk
 from codecov_cli import __version__ as codecov_cli_version
 from codecov_cli.helpers.config import CODECOV_INGEST_URL
 from codecov_cli.helpers.encoder import encode_slug
-from codecov_cli.helpers.upload_type import ReportType
 from codecov_cli.helpers.request import (
     get_token_header,
     send_post_request,
     send_put_request,
 )
+from codecov_cli.helpers.upload_type import ReportType
 from codecov_cli.types import (
     RequestResult,
     UploadCollectionResult,
@@ -33,6 +33,7 @@ class UploadSender(object):
         token: typing.Optional[str],
         env_vars: typing.Dict[str, str],
         report_code: str,
+        url_paths: typing.Dict,
         report_type: ReportType = ReportType.COVERAGE,
         name: typing.Optional[str] = None,
         branch: typing.Optional[str] = None,
@@ -90,6 +91,7 @@ class UploadSender(object):
                     encoded_slug,
                     commit_sha,
                     report_code,
+                    url_paths,
                     upload_coverage,
                 )
                 # Data that goes to storage
@@ -212,21 +214,31 @@ class UploadSender(object):
         encoded_slug,
         commit_sha,
         report_code,
+        url_paths: typing.Dict,
         upload_coverage=False,
         file_not_found=False,
     ):
         if report_type == ReportType.COVERAGE:
-            base_url = f"{upload_url}/upload/{git_service}/{encoded_slug}"
+            coverage_paths = url_paths[report_type]
             if upload_coverage:
-                url = f"{base_url}/upload-coverage"
+                path_template = coverage_paths["upload_coverage"]
             else:
-                url = f"{base_url}/commits/{commit_sha}/reports/{report_code}/uploads"
+                path_template = coverage_paths["uploads"]
+
+            url = upload_url + path_template.format(
+                git_service=git_service,
+                encoded_slug=encoded_slug,
+                commit_sha=commit_sha,
+                report_code=report_code,
+            )
         elif report_type == ReportType.TEST_RESULTS:
             data["slug"] = encoded_slug
             data["branch"] = branch
             data["commit"] = commit_sha
             data["service"] = git_service
             data["file_not_found"] = file_not_found
-            url = f"{upload_url}/upload/test_results/v1"
+
+            path_template = url_paths[report_type]
+            url = upload_url + path_template
 
         return url, data

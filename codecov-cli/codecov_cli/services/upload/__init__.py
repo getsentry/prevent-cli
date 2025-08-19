@@ -7,8 +7,8 @@ import click
 from codecov_cli.fallbacks import FallbackFieldEnum
 from codecov_cli.helpers.ci_adapters.base import CIAdapterBase
 from codecov_cli.helpers.request import log_warnings_and_errors_if_any
-from codecov_cli.helpers.versioning_systems import VersioningSystemInterface
 from codecov_cli.helpers.upload_type import ReportType
+from codecov_cli.helpers.versioning_systems import VersioningSystemInterface
 from codecov_cli.plugins import select_preparation_plugins
 from codecov_cli.services.upload.file_finder import select_file_finder
 from codecov_cli.services.upload.legacy_upload_sender import LegacyUploadSender
@@ -25,6 +25,7 @@ def do_upload_logic(
     cli_config: typing.Dict,
     versioning_system: VersioningSystemInterface,
     ci_adapter: CIAdapterBase,
+    url_paths: typing.Dict,
     upload_coverage: bool = False,
     *,
     args: dict = None,
@@ -141,6 +142,7 @@ def do_upload_logic(
             token=token,
             env_vars=env_vars,
             report_code=report_code,
+            url_paths=url_paths,
             report_type=report_type,
             name=name,
             branch=branch,

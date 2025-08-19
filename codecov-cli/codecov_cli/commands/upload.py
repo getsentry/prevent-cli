@@ -2,17 +2,26 @@ import logging
 import os
 import pathlib
 import typing
+
 import click
 import sentry_sdk
 
 from codecov_cli.fallbacks import CodecovOption, FallbackFieldEnum
 from codecov_cli.helpers.args import get_cli_args
 from codecov_cli.helpers.options import global_options
+from codecov_cli.helpers.upload_type import ReportType, report_type_from_str
 from codecov_cli.services.upload import do_upload_logic
 from codecov_cli.types import CommandContext
-from codecov_cli.helpers.upload_type import report_type_from_str, ReportType
 
 logger = logging.getLogger("codecovcli")
+
+DEFAULT_URL_PATHS = {
+    ReportType.COVERAGE: {
+        "upload_coverage": "/upload/{git_service}/{encoded_slug}/upload-coverage",
+        "uploads": "/upload/{git_service}/{encoded_slug}/commits/{commit_sha}/reports/{report_code}/uploads",
+    },
+    ReportType.TEST_RESULTS: "/upload/test_results/v1",
+}
 
 
 def _turn_env_vars_into_dict(ctx, params, value):
@@ -264,6 +273,8 @@ def do_upload(
             ci_adapter = ctx.obj.get("ci_adapter")
             enterprise_url = ctx.obj.get("enterprise_url")
             args = get_cli_args(ctx)
+
+            url_paths = ctx.obj.get("url_paths", DEFAULT_URL_PATHS)
             logger.debug(
                 "Starting upload processing",
                 extra=dict(
@@ -276,6 +287,7 @@ def do_upload(
                 cli_config,
                 versioning_system,
                 ci_adapter,
+                url_paths,
                 branch=branch,
                 build_code=build_code,
                 build_url=build_url,
