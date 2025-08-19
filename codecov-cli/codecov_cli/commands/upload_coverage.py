@@ -7,11 +7,15 @@ import sentry_sdk
 
 from codecov_cli.commands.commit import create_commit
 from codecov_cli.commands.report import create_report
-from codecov_cli.commands.upload import do_upload, global_upload_options
+from codecov_cli.commands.upload import (
+    DEFAULT_URL_PATHS,
+    do_upload,
+    global_upload_options,
+)
 from codecov_cli.helpers.args import get_cli_args
 from codecov_cli.helpers.options import global_options
+from codecov_cli.helpers.upload_type import ReportType, report_type_from_str
 from codecov_cli.opentelemetry import close_telem
-from codecov_cli.helpers.upload_type import report_type_from_str, ReportType
 from codecov_cli.services.upload_coverage import upload_coverage_logic
 from codecov_cli.types import CommandContext
 
@@ -83,11 +87,13 @@ def upload_coverage(
                 ci_adapter = ctx.obj.get("ci_adapter")
                 enterprise_url = ctx.obj.get("enterprise_url")
                 args = get_cli_args(ctx)
+                url_paths = ctx.obj.get("url_paths", DEFAULT_URL_PATHS)
                 ctx.invoke(
                     upload_coverage_logic,
                     cli_config,
                     versioning_system,
                     ci_adapter,
+                    url_paths=url_paths,
                     branch=branch,
                     build_code=build_code,
                     build_url=build_url,

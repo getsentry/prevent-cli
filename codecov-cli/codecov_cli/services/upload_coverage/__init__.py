@@ -2,15 +2,16 @@ import pathlib
 import typing
 
 from codecov_cli.helpers.ci_adapters.base import CIAdapterBase
+from codecov_cli.helpers.upload_type import ReportType
 from codecov_cli.helpers.versioning_systems import VersioningSystemInterface
 from codecov_cli.services.upload import do_upload_logic
-from codecov_cli.helpers.upload_type import ReportType
 
 
 def upload_coverage_logic(
     cli_config: typing.Dict,
     versioning_system: VersioningSystemInterface,
     ci_adapter: CIAdapterBase,
+    url_paths: typing.Dict,
     *,
     branch: typing.Optional[str],
     build_code: typing.Optional[str],
@@ -53,6 +54,7 @@ def upload_coverage_logic(
         cli_config=cli_config,
         versioning_system=versioning_system,
         ci_adapter=ci_adapter,
+        url_paths=url_paths,
         upload_coverage=True,
         args=args,
         branch=branch,
