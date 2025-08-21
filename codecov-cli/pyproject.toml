@@ -34,6 +34,7 @@ dev = [
 [project.scripts]
 codecov = "codecov_cli.main:run"
 codecovcli = "codecov_cli.main:run"
+codecov-cli = "codecov_cli.main:run"
 
 [build-system]
 requires = ["setuptools"]
