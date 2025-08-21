@@ -1,22 +1,23 @@
 import json
 import re
+from copy import deepcopy
 from pathlib import Path
 
-from copy import deepcopy
 import pytest
 import responses
 from responses import matchers
 
 from codecov_cli import __version__ as codecov_cli_version
+from codecov_cli.commands.upload import DEFAULT_URL_PATHS
 from codecov_cli.helpers.encoder import encode_slug
+from codecov_cli.helpers.upload_type import ReportType
 from codecov_cli.services.upload.upload_sender import UploadSender
 from codecov_cli.types import (
     UploadCollectionResult,
-    UploadCollectionResultFileFixer,
     UploadCollectionResultFile,
+    UploadCollectionResultFileFixer,
 )
 from tests.data import reports_examples
-from codecov_cli.helpers.upload_type import ReportType
 
 upload_collection = UploadCollectionResult(["1", "apple.py", "3"], [], [])
 random_token = "f359afb9-8a2a-42ab-a448-c3d267ff495b"
@@ -26,6 +27,7 @@ named_upload_data = {
     "report_type": ReportType.COVERAGE,
     "report_code": "report_code",
     "env_vars": {},
+    "url_paths": DEFAULT_URL_PATHS,
     "name": "name",
     "branch": "branch",
     "slug": "org/repo",
@@ -41,6 +43,7 @@ test_results_named_upload_data = {
     "report_type": ReportType.TEST_RESULTS,
     "report_code": "report_code",
     "env_vars": {},
+    "url_paths": DEFAULT_URL_PATHS,
     "name": "name",
     "branch": "branch",
     "slug": "org/repo",
@@ -351,7 +354,10 @@ class TestUploadSender(object):
         ]
 
         sending_result = UploadSender().send_upload_data(
-            upload_collection, random_sha, None, **named_upload_data
+            upload_collection,
+            random_sha,
+            None,
+            **named_upload_data,
         )
         assert sending_result.error is None
         assert sending_result.warnings == []
@@ -374,7 +380,10 @@ class TestUploadSender(object):
         self, mocked_responses, mocked_legacy_upload_endpoint, mocked_storage_server
     ):
         sending_result = UploadSender().send_upload_data(
-            upload_collection, random_sha, random_token, **named_upload_data
+            upload_collection,
+            random_sha,
+            random_token,
+            **named_upload_data,
         )
         assert sending_result.error is None
         assert sending_result.warnings == []
@@ -388,7 +397,10 @@ class TestUploadSender(object):
         self, mocked_responses, mocked_legacy_upload_endpoint, mocked_storage_server
     ):
         sender = UploadSender().send_upload_data(
-            upload_collection, random_sha, random_token, **named_upload_data
+            upload_collection,
+            random_sha,
+            random_token,
+            **named_upload_data,
         )
 
         # default status for both put and post is 200
@@ -402,7 +414,10 @@ class TestUploadSender(object):
         mocked_legacy_upload_endpoint.status = 400
 
         sender = UploadSender().send_upload_data(
-            upload_collection, random_sha, random_token, **named_upload_data
+            upload_collection,
+            random_sha,
+            random_token,
+            **named_upload_data,
         )
 
         assert len(mocked_responses.calls) == 1
@@ -439,7 +454,10 @@ class TestUploadSender(object):
         mocked_storage_server.status = 400
 
         sender = UploadSender().send_upload_data(
-            upload_collection, random_sha, random_token, **named_upload_data
+            upload_collection,
+            random_sha,
+            random_token,
+            **named_upload_data,
         )
 
         assert len(mocked_responses.calls) == 2
@@ -455,7 +473,10 @@ class TestUploadSender(object):
         mocked_legacy_upload_endpoint.status = 400
 
         sender = UploadSender().send_upload_data(
-            upload_collection, random_sha, random_token, **named_upload_data
+            upload_collection,
+            random_sha,
+            random_token,
+            **named_upload_data,
         )
 
         assert sender.error is not None
