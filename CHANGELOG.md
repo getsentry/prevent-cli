@@ -1,3 +1,10 @@
+## 11.2.0
+
+### Various fixes & improvements
+
+- fix: set codecov-cli as an entrypoint (#91) by @joseph-sentry
+- fix: add support for deriving repo slug from BUILDKITE_REPO (#88) by @joseph-sentry
+
 ## 11.1.0
 
 ### Various fixes & improvements
