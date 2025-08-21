@@ -108,7 +108,7 @@ wheels = [
 
 [[package]]
 name = "codecov-cli"
-version = "11.1.0"
+version = "11.2.0"
 source = { editable = "../codecov-cli" }
 dependencies = [
     { name = "click" },
@@ -397,7 +397,7 @@ wheels = [
 
 [[package]]
 name = "sentry-prevent-cli"
-version = "11.1.0"
+version = "11.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "codecov-cli" },
