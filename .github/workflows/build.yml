@@ -165,11 +165,25 @@ jobs:
     name: Package assets for Craft
     runs-on: ubuntu-latest
     needs: [build_for_pypi, build_assets, build_linux_assets]
+    permissions:
+      id-token: write # needed for signing binaries with OIDC token via Cosign
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           pattern: "{sentry-prevent-,codecov-,codecov}cli*"
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@d58896d6a1865668819e1d91763c7751a165e159 # v3.9.2
+
+      - name: Sign sentry-prevent-cli binaries
+        run: |
+          # Glob matches all prevent-cli binaries, not python wheel nor anything else.
+          for file in sentry-prevent-cli_*/sentry-prevent-cli_*; do
+            cosign sign-blob $file --bundle "$file.bundle" --yes;
+            # Test verification because why not
+            cosign verify-blob $file --bundle "$file.bundle" --certificate-identity-regexp="^https://github\.com/getsentry/prevent-cli/\.github/workflows/build\.yml@refs/heads/release/[0-9]+\.[0-9]+\.[0-9]+" --certificate-oidc-issuer=https://token.actions.githubusercontent.com
+          done
 
       - name: Upload release artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -180,3 +194,4 @@ jobs:
             sentry-prevent-cli_wheel/*
             codecovcli*
             codecov-cli_wheel/*
+            *.bundle
