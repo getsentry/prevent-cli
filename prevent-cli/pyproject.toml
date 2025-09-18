@@ -9,7 +9,7 @@ authors = [{ name = "Sentry", email = "oss@sentry.io" }]
 requires-python = ">=3.9"
 dependencies = [
     "codecov-cli==11.2.2",
-    "click==8.*",
+    "click>=8.0.0,<8.3.0",
     "sentry-sdk==2.*",
 ]
 
