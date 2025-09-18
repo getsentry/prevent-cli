@@ -1,3 +1,9 @@
+## 11.2.3
+
+### Various fixes & improvements
+
+- build: pin click version to correct version (#95) by @joseph-sentry
+
 ## 11.2.2
 
 ### Various fixes & improvements

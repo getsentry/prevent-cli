@@ -121,7 +121,7 @@ wheels = [
 
 [[package]]
 name = "codecov-cli"
-version = "11.2.2"
+version = "11.2.3"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
@@ -145,7 +145,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "click", specifier = "==8.*" },
+    { name = "click", specifier = ">=8.0.0,<8.3.0" },
     { name = "ijson", specifier = "==3.*" },
     { name = "pyyaml", specifier = "==6.*" },
     { name = "responses", specifier = "==0.21.*" },
