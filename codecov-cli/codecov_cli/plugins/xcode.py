@@ -90,7 +90,7 @@ class XcodePlugin(object):
                     dest = (
                         proj_path
                         if proj_path.is_file()
-                        else dir_path / "Contents/MacOS/{proj}"
+                        else dir_path / f"Contents/MacOS/{proj}"
                     )
                     output_file_name = f"{proj}.{type}.coverage.txt".replace(" ", "")
                     self.run_llvm_cov(output_file_name, path, dest)
