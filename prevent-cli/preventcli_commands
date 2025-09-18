@@ -225,7 +225,7 @@ Options:
                                   brackets)
   -b, --build, --build-code TEXT  Specify the build number manually
   --build-url TEXT                The URL of the build where this is running
-  --job-code TEXT
+  --job-code TEXT                 Specify the job code manually
   -n, --name TEXT                 Custom defined name of the upload. Visible
                                   in Codecov UI
   -B, --branch TEXT               Branch to which this commit belongs to

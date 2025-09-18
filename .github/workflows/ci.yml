@@ -65,15 +65,16 @@ jobs:
 
       - name: Install CLI
         run: |
-          pip install codecov-cli
+          pip install uv
+          uv sync --project codecov-cli
 
       - name: Create commit in codecov
         run: |
-          codecovcli create-commit -t ${{ secrets.CODECOV_TOKEN }} --git-service github
+          uv run --project codecov-cli codecovcli -v create-commit -t ${{ secrets.CODECOV_TOKEN }} --git-service github
 
       - name: Create commit report in codecov
         run: |
-          codecovcli create-report -t ${{ secrets.CODECOV_TOKEN }} --git-service github
+          uv run --project codecov-cli codecovcli -v create-report -t ${{ secrets.CODECOV_TOKEN }} --git-service github
 
   build-test-upload:
     strategy:

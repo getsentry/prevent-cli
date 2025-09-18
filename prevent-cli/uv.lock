@@ -400,7 +400,9 @@ name = "sentry-prevent-cli"
 version = "11.2.0"
 source = { editable = "." }
 dependencies = [
+    { name = "click" },
     { name = "codecov-cli" },
+    { name = "sentry-sdk" },
 ]
 
 [package.dev-dependencies]
@@ -409,7 +411,11 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "codecov-cli", editable = "../codecov-cli" }]
+requires-dist = [
+    { name = "click", specifier = "==8.*" },
+    { name = "codecov-cli", editable = "../codecov-cli" },
+    { name = "sentry-sdk", specifier = "==2.*" },
+]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pyinstaller", specifier = "==6.*" }]

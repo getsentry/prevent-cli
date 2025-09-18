@@ -12,20 +12,26 @@ class GithubActionsCIAdapter(CIAdapterBase):
 
     def _get_commit_sha(self):
         pr = self._get_pull_request_number()
+        print("pr", pr)
         commit = os.getenv("GITHUB_SHA")
+        print("commit", commit)
 
         if not pr:
+            print("no pr")
             return commit
 
         # actions/checkout should be run with fetch-depth > 1 or set to 0 for this to work
         completed_subprocess = subprocess.run(
             ["git", "rev-parse", "HEAD^@"], capture_output=True
         )
-
+        print("completed_subprocess", completed_subprocess)
         parents_hash = completed_subprocess.stdout.decode().strip().splitlines()
+        print("parents_hash", parents_hash)
         if len(parents_hash) == 2:
+            print("parents_hash[1]", parents_hash[1])
             return parents_hash[1]
 
+        print("commit", commit)
         return commit
 
     def _get_build_url(self):
