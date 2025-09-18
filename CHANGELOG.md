@@ -1,3 +1,9 @@
+## 11.2.2
+
+### Various fixes & improvements
+
+- build: try auto discovering packages in setup tools (#94) by @joseph-sentry
+
 ## 11.2.1
 
 ### Various fixes & improvements
