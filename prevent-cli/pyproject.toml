@@ -1,6 +1,6 @@
 [project]
 name = "sentry-prevent-cli"
-version = "11.2.0"
+version = "11.2.1"
 description = "Sentry Prevent Command Line Interface"
 readme = "README.md"
 license-files = ["LICENSE"]
@@ -8,7 +8,7 @@ authors = [{ name = "Sentry", email = "oss@sentry.io" }]
 
 requires-python = ">=3.9"
 dependencies = [
-    "codecov-cli==11.2.0",
+    "codecov-cli==11.2.1",
     "click==8.*",
     "sentry-sdk==2.*",
 ]

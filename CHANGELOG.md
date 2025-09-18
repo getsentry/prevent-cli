@@ -1,3 +1,10 @@
+## 11.2.1
+
+### Various fixes & improvements
+
+- fix: don't deepcopy click command in prevent cli (#93) by @joseph-sentry
+- feat: Sign sentry-prevent-cli binaries with Cosign (#86) by @spalmurray
+
 ## 11.2.0
 
 ### Various fixes & improvements
