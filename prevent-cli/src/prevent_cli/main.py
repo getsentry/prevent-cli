@@ -1,7 +1,6 @@
 import logging
 import pathlib
 import typing
-from copy import deepcopy
 
 import click
 from codecov_cli import __version__
@@ -22,6 +21,8 @@ from codecov_cli.helpers.config import load_cli_config
 from codecov_cli.helpers.logging_utils import configure_logger
 from codecov_cli.helpers.versioning_systems import get_versioning_system
 from codecov_cli.opentelemetry import init_telem
+
+from prevent_cli.commands.upload import upload
 
 logger = logging.getLogger("codecovcli")
 
@@ -84,20 +85,6 @@ def cli(
     ctx.obj["branding"] = branding
 
     init_telem(ctx.obj)
-
-
-upload = deepcopy(upload_coverage)
-upload.name = "upload"
-
-for i, param in enumerate(upload.params):
-    if param.name == "report_type_str":
-        upload.params[i] = click.Option(
-            ("--report-type", "report_type_str"),
-            help="The type of report to upload",
-            default="coverage",
-            type=click.Choice(["coverage", "test-results", "test_results"]),
-        )
-        break
 
 
 cli.add_command(do_upload)
