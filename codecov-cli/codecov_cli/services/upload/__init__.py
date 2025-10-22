@@ -97,8 +97,8 @@ def do_upload_logic(
         preparation_plugins,
         network_finder,
         file_selector,
-        disable_file_fixes,
         plugin_config,
+        disable_file_fixes,
     )
     try:
         upload_data = collector.generate_upload_data(report_type)
