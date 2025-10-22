@@ -1,3 +1,9 @@
+## 11.2.4
+
+### Various fixes & improvements
+
+- fix: run file fixes (#100) by @thomasrockhu-codecov
+
 ## 11.2.3
 
 ### Various fixes & improvements
