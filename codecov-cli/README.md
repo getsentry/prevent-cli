@@ -1,6 +1,6 @@
 # CodecovCLI
 
-[![codecov](https://codecov.io/gh/getsentry/prevent-cli/branch/main/graph/badge.svg?token=jN0CICuA6Z)](https://codecov.io/gh/getsentry/prevent-cli)
+[![codecov](https://codecov.io/github/getsentry/prevent-cli/graph/badge.svg?token=K1xQn7DaxT)](https://codecov.io/github/getsentry/prevent-cli)
 [![Build-Test-Upload](https://github.com/getsentry/prevent-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/getsentry/prevent-cli/actions/workflows/ci.yml)
 
 CodecovCLI is a new way for users to interact with Codecov directly from the user’s terminal or CI platform. Many Codecov features that require the user’s interference can be done via the codecovCLI. It saves commits, creates reports, uploads coverage and has many more features.
