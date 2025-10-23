@@ -1,7 +1,7 @@
 # CodecovCLI
 
-[![codecov](https://codecov.io/gh/codecov/codecov-cli/branch/master/graph/badge.svg?token=jN0CICuA6Z)](https://codecov.io/gh/codecov/codecov-cli)
-[![Build-Test-Upload](https://github.com/codecov/codecov-cli/actions/workflows/push_flow.yml/badge.svg)](https://github.com/codecov/codecov-cli/actions/workflows/push_flow.yml)
+[![codecov](https://codecov.io/github/getsentry/prevent-cli/graph/badge.svg?token=K1xQn7DaxT)](https://codecov.io/github/getsentry/prevent-cli)
+[![Build-Test-Upload](https://github.com/getsentry/prevent-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/getsentry/prevent-cli/actions/workflows/ci.yml)
 
 CodecovCLI is a new way for users to interact with Codecov directly from the user’s terminal or CI platform. Many Codecov features that require the user’s interference can be done via the codecovCLI. It saves commits, creates reports, uploads coverage and has many more features.
 
@@ -41,7 +41,7 @@ The above command will download the latest version of Codecov-cli. If you wish t
 Note: If you're installing in a `pyenv` environment, you may need to call `pyenv rehash` before the CLI will work.
 
 ## As a Binary
-If you would like to use the CLI in an environment that does not have access to Python / PIP, you can install the CLI as a compiled binary. Linux and macOS releases can be found [here](https://cli.codecov.io/), along with SHASUMs and signatures for each released version. Binary releases are also available via [Github releases](https://github.com/codecov/codecov-cli/releases) on this repository.
+If you would like to use the CLI in an environment that does not have access to Python / PIP, you can install the CLI as a compiled binary. Linux and macOS releases can be found [here](https://cli.codecov.io/), along with SHASUMs and signatures for each released version. Binary releases are also available via [Github releases](https://github.com/getsentry/prevent-cli/releases) on this repository.
 
 You can retrieve the Binary for Linux directly from your command line as follows:
 
@@ -99,7 +99,7 @@ The following tokens are suitable for uploading:
 If the installation is successful, running `codecovcli --help` will output the available commands along with the different general options that can be used with them.
 
 > [!IMPORTANT]
-> For up-to-date command usage, please check the `codecovcli_commands` [file](https://github.com/codecov/codecov-cli/blob/main/codecovcli_commands)
+> For up-to-date command usage, please check the `codecovcli_commands` [file](https://github.com/getsentry/prevent-cli/blob/main/codecov-cli/codecovcli_commands)
 
 ```
 Usage: codecovcli [OPTIONS] COMMAND [ARGS]...
