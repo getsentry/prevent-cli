@@ -1,3 +1,13 @@
+## 11.2.5
+
+### Various fixes & improvements
+
+- chore(release): bump test-results-parser to 0.6.0 (#102) by @thomasrockhu-codecov
+- Update README links to point to new repository (#97) by @webknjaz
+- Show project URLs on PyPI (#99) by @webknjaz
+- Remove pytest-asyncio from dev dependencies (#98) by @webknjaz
+- fix: Add missing f string in swiftcov func of xcode plugin (#96) by @wallisch
+
 ## 11.2.4
 
 ### Various fixes & improvements
