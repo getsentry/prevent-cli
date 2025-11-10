@@ -1,6 +1,6 @@
 [project]
 name = "codecov-cli"
-version = "11.2.4"
+version = "11.2.5"
 description = "Codecov Command Line Interface"
 readme = "README.md"
 license-files = ["LICENSE"]
@@ -17,7 +17,7 @@ dependencies = [
     "PyYAML==6.*",
     "responses==0.21.*",
     "sentry-sdk==2.*",
-    "test-results-parser==0.5.4",
+    "test-results-parser==0.6.0",
 ]
 
 [dependency-groups]
