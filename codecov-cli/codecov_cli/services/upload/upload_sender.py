@@ -2,6 +2,7 @@ import base64
 import json
 import logging
 import typing
+import sys
 import zlib
 from typing import Any, Dict
 
@@ -124,8 +125,10 @@ class UploadSender(object):
                 )
                 put_url = resp_json_obj["raw_upload_location"]
 
-            with sentry_sdk.start_span(name="upload_sender_storage"):
-                logger.debug("Sending upload to storage")
+            with sentry_sdk.start_span(name="upload_sender_storage") as storage_span:
+                payload_size = sys.getsizeof(reports_payload)
+                storage_span.set_data("payload_size", payload_size)
+                logger.debug(f"Sending upload ({payload_size} bytes) to storage")
                 resp_from_storage = send_put_request(put_url, data=reports_payload)
 
             return resp_from_storage
