@@ -1,3 +1,9 @@
+## 11.2.6
+
+### Bug Fixes 🐛
+
+- fix: add payload size and bump test-results-parser by @thomasrockhu-codecov in [#105](https://github.com/getsentry/prevent-cli/pull/105)
+
 ## 11.2.5
 
 ### Various fixes & improvements
