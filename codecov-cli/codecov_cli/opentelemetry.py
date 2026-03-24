@@ -12,26 +12,14 @@ _SAMPLED_MESSAGES = [
 _SAMPLE_RATE = 100
 
 
-def _collect_messages(event):
-    msg = (event.get("logentry") or {}).get("message", "")
-    if msg:
-        yield msg
-    msg = event.get("message", "")
-    if msg:
-        yield msg
-    for exc in (event.get("exception") or {}).get("values", []):
-        val = exc.get("value", "")
-        if val:
-            yield val
-
-
 def _before_send(event, hint):
-    for message in _collect_messages(event):
-        for pattern in _SAMPLED_MESSAGES:
-            if pattern in message:
-                if random.randint(1, _SAMPLE_RATE) != 1:
-                    return None
-                return event
+    text = " ".join(filter(None, [
+        (event.get("logentry") or {}).get("message"),
+        event.get("message"),
+        *[e.get("value") for e in (event.get("exception") or {}).get("values", [])],
+    ]))
+    if any(p in text for p in _SAMPLED_MESSAGES) and random.randint(1, _SAMPLE_RATE) != 1:
+        return None
     return event
 
 
