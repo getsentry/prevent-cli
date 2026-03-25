@@ -22,11 +22,15 @@ def _before_send(event, hint):
         if "value" in exc:
             messages.append(exc.get("value"))
 
+    matched = False
     for message in messages:
         for pattern in _SAMPLED_MESSAGES:
-            if pattern in message and random.randint(1, _SAMPLE_RATE) != 1:
-                return None
+            if pattern in message:
+                matched = True
+                break
 
+    if matched and random.randint(1, _SAMPLE_RATE) != 1:
+        return None
     return event
 
 
