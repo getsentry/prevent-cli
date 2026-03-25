@@ -5,22 +5,23 @@ import sentry_sdk
 
 from codecov_cli import __version__
 
-_SKIP_TAG_KEYS = {"branch", "flags", "commit_sha", "env_vars"}
 _SAMPLED_MESSAGES = [
     "Token required",
 ]
 _SAMPLE_RATE = 100
+_SKIP_TAG_KEYS = {"branch", "flags", "commit_sha", "env_vars"}
 
 
 def _before_send(event, hint):
     messages = []
-    if "message" in event:
+    if "message" in event and event.get("message") is not None:
         messages.append(event.get("message"))
-    if "logentry" in event and "message" in event.get("logentry"):
-        messages.append(event.get("logentry").get("message"))
-    for exc in (event.get("exception", {})).get("values", []):
-        if "value" in exc:
-            messages.append(exc.get("value"))
+    if "logentry" in event and "message" in event.get("logentry", {}) and event.get("logentry", {}).get("message") is not None:
+        messages.append(event.get("logentry", {}).get("message"))
+    if "exception" in event and event.get("exception") is not None:
+        for exc in event.get("exception", {}).get("values", []):
+            if "value" in exc:
+                messages.append(exc.get("value"))
 
     matched = False
     for message in messages:
