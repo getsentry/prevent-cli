@@ -13,13 +13,20 @@ _SAMPLE_RATE = 100
 
 
 def _before_send(event, hint):
-    text = " ".join(filter(None, [
-        (event.get("logentry") or {}).get("message"),
-        event.get("message"),
-        *[e.get("value") for e in (event.get("exception") or {}).get("values", [])],
-    ]))
-    if any(p in text for p in _SAMPLED_MESSAGES) and random.randint(1, _SAMPLE_RATE) != 1:
-        return None
+    messages = []
+    if "message" in event:
+        messages.append(event.get("message"))
+    if "logentry" in event and "message" in event.get("logentry"):
+        messages.append(event.get("logentry").get("message"))
+    for exc in (event.get("exception", {})).get("values", []):
+        if "value" in exc:
+            messages.append(exc.get("value"))
+
+    for message in messages:
+        for pattern in _SAMPLED_MESSAGES:
+            if pattern in message and random.randint(1, _SAMPLE_RATE) != 1:
+                return None
+
     return event
 
 
