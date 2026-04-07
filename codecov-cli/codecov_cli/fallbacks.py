@@ -17,6 +17,17 @@ class FallbackFieldEnum(Enum):
     job_name = auto()
 
 
+# Only these may be resolved from git; all other FallbackFieldEnum values are CI-only.
+_FIELDS_WITH_VERSIONING_FALLBACK = frozenset(
+    {
+        FallbackFieldEnum.branch,
+        FallbackFieldEnum.commit_sha,
+        FallbackFieldEnum.slug,
+        FallbackFieldEnum.git_service,
+    }
+)
+
+
 class CodecovOption(click.Option):
     fallback_fields: typing.Optional[tuple[FallbackFieldEnum, ...]]
 
@@ -43,7 +54,10 @@ class CodecovOption(click.Option):
                     res = ctx.obj.get("ci_adapter").get_fallback_value(field)
                     if res is not None:
                         return res
-                if ctx.obj.get("versioning_system") is not None:
+                if (
+                    ctx.obj.get("versioning_system") is not None
+                    and field in _FIELDS_WITH_VERSIONING_FALLBACK
+                ):
                     res = ctx.obj.get("versioning_system").get_fallback_value(field)
                     if res is not None:
                         return res
