@@ -87,3 +87,6 @@ class GithubActionsCIAdapter(CIAdapterBase):
 
     def get_service_name(self):
         return "GithubActions"
+
+    def _get_job_name(self):
+        return os.getenv("GITHUB_JOB")
