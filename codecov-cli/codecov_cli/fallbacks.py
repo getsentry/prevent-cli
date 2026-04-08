@@ -17,7 +17,6 @@ class FallbackFieldEnum(Enum):
     job_name = auto()
 
 
-# Only these may be resolved from git; all other FallbackFieldEnum values are CI-only.
 _FIELDS_WITH_VERSIONING_FALLBACK = frozenset(
     {
         FallbackFieldEnum.branch,
