@@ -39,11 +39,16 @@ class TestHttpHeaderOption:
                 "CF-Access-Client-Id:abc123",
                 "--http-header",
                 "CF-Access-Client-Secret:xyz789",
+                "do-upload",
                 "--help",
             ],
             obj={},
         )
         assert result.exit_code == 0
+        assert request_module._extra_headers == {
+            "CF-Access-Client-Id": "abc123",
+            "CF-Access-Client-Secret": "xyz789",
+        }
 
     def test_http_header_invalid_format(self):
         runner = CliRunner()
@@ -59,7 +64,18 @@ class TestHttpHeaderOption:
         runner = CliRunner()
         result = runner.invoke(
             main.cli,
-            ["--http-header", "X-Test:value:with:colons", "--help"],
+            ["--http-header", "X-Test:value:with:colons", "do-upload", "--help"],
             obj={},
         )
         assert result.exit_code == 0
+        assert request_module._extra_headers == {"X-Test": "value:with:colons"}
+
+    def test_http_header_empty_name(self):
+        runner = CliRunner()
+        result = runner.invoke(
+            main.cli,
+            ["--http-header", ":value", "do-upload", "--help"],
+            obj={},
+        )
+        assert result.exit_code != 0
+        assert "Header name cannot be empty" in result.output

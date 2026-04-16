@@ -88,7 +88,13 @@ def cli(
                     param_hint="'--http-header'",
                 )
             name, value = h.split(":", 1)
-            extra[name.strip()] = value.strip()
+            name = name.strip()
+            if not name:
+                raise click.BadParameter(
+                    f"Invalid header format: '{h}'. Header name cannot be empty.",
+                    param_hint="'--http-header'",
+                )
+            extra[name] = value.strip()
         set_extra_headers(extra)
     init_telem(ctx.obj)
 
